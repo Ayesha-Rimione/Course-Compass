@@ -1,10 +1,15 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { CountUp, Reveal } from "@/components/motion";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
-import { planning, progressOverview, roadmap } from "@/data/mock";
+import { Roadmap as RoadmapType, Course, Skill } from "@/types";
+import { getCourses } from "@/api/courses";
+import { getSkills } from "@/api/skills";
+import { getRoadmap, getPlanningRecommendations } from "@/api/roadmap";
+import { Recommendation } from "@/data/mock";
 
 export const Route = createFileRoute("/app/progress")({
   head: () => ({
@@ -22,11 +27,26 @@ export const Route = createFileRoute("/app/progress")({
 });
 
 function ProgressPage() {
-  const p = progressOverview;
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [skills, setSkills] = useState<Skill[]>([]);
+  const [roadmap, setRoadmap] = useState<RoadmapType | null>(null);
+  const [weeklyRecs, setWeeklyRecs] = useState<Recommendation[]>([]);
+
+  useEffect(() => {
+    getCourses().then(setCourses);
+    getSkills().then(setSkills);
+    getRoadmap().then(setRoadmap);
+    getPlanningRecommendations().then((res) => setWeeklyRecs(res.weekly));
+  }, []);
+
+  const completedCourses = courses.filter((c) => c.status === "completed");
+  const creditsEarned = completedCourses.reduce((sum, c) => sum + c.credits, 0);
+  const creditsTotal = courses.reduce((sum, c) => sum + c.credits, 120);
+
   const cards = [
-    { label: "Credits earned", value: p.creditsEarned, total: p.creditsTotal },
-    { label: "Courses completed", value: p.coursesCompleted, total: p.coursesTotal },
-    { label: "Skills rated", value: p.skillsRated, total: 20 },
+    { label: "Credits earned", value: creditsEarned, total: creditsTotal },
+    { label: "Courses completed", value: completedCourses.length, total: courses.length || 40 },
+    { label: "Skills rated", value: skills.length, total: 20 },
   ];
 
   return (
@@ -65,7 +85,7 @@ function ProgressPage() {
                 <CountUp value={card.value} />
                 <span className="text-2xl text-ink-soft"> / {card.total}</span>
               </p>
-              <Progress value={(card.value / card.total) * 100} className="mt-5 h-1.5" />
+              <Progress value={(card.value / (card.total || 1)) * 100} className="mt-5 h-1.5" />
             </div>
           </Reveal>
         ))}
@@ -75,11 +95,15 @@ function ProgressPage() {
         <Reveal delay={100}>
           <div className="card-soft p-8">
             <p className="eyebrow">Target role</p>
-            <h2 className="mt-2 font-display text-3xl font-bold">{roadmap.targetRole}</h2>
+            <h2 className="mt-2 font-display text-3xl font-bold">
+              {roadmap?.targetRole || (roadmap?.status === "EXPLORING" ? "Still Exploring" : "Role Not Selected")}
+            </h2>
             <p className="mt-5 font-display text-6xl font-bold text-amber">
-              <CountUp value={roadmap.percent} suffix="%" />
+              <CountUp value={roadmap?.percent || 0} suffix="%" />
             </p>
-            <p className="mt-4 max-w-md text-sm leading-relaxed text-ink-soft">{roadmap.summary}</p>
+            <p className="mt-4 max-w-md text-sm leading-relaxed text-ink-soft">
+              {roadmap?.summary || "Select a target career role in Profile or Build Profile to calculate your readiness."}
+            </p>
             <Link
               to="/app/roadmap"
               className="mt-6 inline-flex items-center gap-1.5 font-display text-sm font-semibold text-ink hover:text-amber"
@@ -93,7 +117,7 @@ function ProgressPage() {
           <div className="card-soft p-8">
             <p className="eyebrow">This week</p>
             <ul className="mt-5 space-y-4">
-              {planning.weekly.slice(0, 4).map((rec) => (
+              {weeklyRecs.slice(0, 4).map((rec) => (
                 <li key={rec.id} className="flex gap-3 text-sm">
                   <span className="mt-1.5 size-1.5 shrink-0 rounded-full bg-amber" />
                   <span className="leading-relaxed">{rec.title}</span>

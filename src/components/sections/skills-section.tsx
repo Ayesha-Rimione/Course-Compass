@@ -1,27 +1,41 @@
-import { useState } from "react";
-import { Plus, Search, Timer } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Plus, Search, Timer, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { skills as seedSkills, skillSuggestions, type Skill } from "@/data/mock";
+import { skillSuggestions } from "@/data/mock";
+import { Skill } from "@/types";
+import { getSkills, addSkill as apiAddSkill, updateSkillLevel as apiUpdateSkillLevel, removeSkill as apiRemoveSkill } from "@/api/skills";
 import { cn } from "@/lib/utils";
 
 export function SkillsSection() {
-  const [skills, setSkills] = useState<Skill[]>(seedSkills);
+  const [skills, setSkills] = useState<Skill[]>([]);
   const [query, setQuery] = useState("");
   const [draft, setDraft] = useState("");
   const [quiz, setQuiz] = useState<"pending" | "accepted" | "declined">("pending");
 
+  useEffect(() => {
+    getSkills().then(setSkills);
+  }, []);
+
   const visible = skills.filter((s) => s.name.toLowerCase().includes(query.toLowerCase()));
 
-  const addSkill = (name: string) => {
+  const handleAddSkill = async (name: string) => {
     const clean = name.trim();
     if (!clean) return;
-    setSkills((prev) =>
-      prev.some((s) => s.name.toLowerCase() === clean.toLowerCase())
-        ? prev
-        : [...prev, { id: clean.toLowerCase(), name: clean, level: 1, category: "Added by you" }],
-    );
+    if (skills.some((s) => s.name.toLowerCase() === clean.toLowerCase())) return;
+    const newSkill = await apiAddSkill(clean, "Custom", 1);
+    setSkills((prev) => [...prev, newSkill]);
     setDraft("");
+  };
+
+  const handleUpdateLevel = async (id: string, level: number) => {
+    setSkills((prev) => prev.map((s) => (s.id === id ? { ...s, level } : s)));
+    await apiUpdateSkillLevel(id, level);
+  };
+
+  const handleRemoveSkill = async (id: string) => {
+    setSkills((prev) => prev.filter((s) => s.id !== id));
+    await apiRemoveSkill(id);
   };
 
   return (
@@ -50,15 +64,11 @@ export function SkillsSection() {
                     key={n}
                     type="button"
                     aria-label={`${skill.name} level ${n}`}
-                    onClick={() =>
-                      setSkills((prev) =>
-                        prev.map((s) => (s.id === skill.id ? { ...s, level: n } : s)),
-                      )
-                    }
+                    onClick={() => handleUpdateLevel(skill.id, n)}
                     className={cn(
                       "h-7 w-7 rounded-md border font-display text-xs transition-colors",
                       skill.level >= n
-                        ? "border-amber bg-amber text-primary-foreground"
+                        ? "border-amber bg-amber text-primary-foreground font-semibold"
                         : "border-border bg-background text-ink-soft hover:border-ink/30",
                     )}
                   >
@@ -66,6 +76,14 @@ export function SkillsSection() {
                   </button>
                 ))}
               </div>
+              <button
+                type="button"
+                onClick={() => handleRemoveSkill(skill.id)}
+                className="text-ink-soft hover:text-destructive transition-colors p-1"
+                title="Remove skill"
+              >
+                <Trash2 className="size-4" />
+              </button>
             </div>
           ))}
           {visible.length === 0 && (
@@ -77,13 +95,13 @@ export function SkillsSection() {
           className="mt-5 flex gap-2 border-t border-border pt-5"
           onSubmit={(e) => {
             e.preventDefault();
-            addSkill(draft);
+            handleAddSkill(draft);
           }}
         >
           <Input
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
-            placeholder="Add a skill, e.g. Kubernetes"
+            placeholder="Add a custom skill, e.g. FastAPI"
             className="h-11 rounded-xl"
           />
           <Button type="submit" className="rounded-xl px-4">
@@ -98,7 +116,7 @@ export function SkillsSection() {
               <button
                 key={s}
                 type="button"
-                onClick={() => addSkill(s)}
+                onClick={() => handleAddSkill(s)}
                 className="rounded-full border border-border px-3 py-1.5 text-xs text-ink-soft transition-colors hover:border-amber hover:text-ink"
               >
                 + {s}

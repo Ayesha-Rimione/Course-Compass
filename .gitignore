@@ -30,3 +30,18 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Environment & Python Backend
+.env
+.env.*
+!.env.example
+*.db
+*.sqlite
+*.sqlite3
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+backend/venv/
+.pytest_cache/
+

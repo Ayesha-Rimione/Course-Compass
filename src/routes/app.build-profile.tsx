@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
-import { Bot, Check, Code2, Github, Linkedin, Trophy, Upload } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Bot, Upload } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,7 +9,10 @@ import { Textarea } from "@/components/ui/textarea";
 import { CurriculumSection } from "@/components/sections/curriculum-section";
 import { SkillsSection } from "@/components/sections/skills-section";
 import { InterestsSection } from "@/components/sections/interests-section";
-import { semesters } from "@/data/mock";
+import { ProjectsSection } from "@/components/sections/projects-section";
+import { CertificationsSection } from "@/components/sections/certifications-section";
+import { StudentProfile } from "@/types";
+import { getStudentProfile, updateStudentProfile } from "@/api/students";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/app/build-profile")({
@@ -19,7 +22,7 @@ export const Route = createFileRoute("/app/build-profile")({
       {
         name: "description",
         content:
-          "One page, six sections: basics, bio, academic standing, coding links, curriculum, skills and interests.",
+          "One page: basics, bio, academic standing, coding links, curriculum, skills, projects, certifications, and career interests.",
       },
       { property: "og:title", content: "Build my profile — CourseCompass" },
       {
@@ -36,54 +39,76 @@ const sections = [
   { id: "bio", label: "Short bio" },
   { id: "academic", label: "Academic standing" },
   { id: "links", label: "Coding profiles" },
+  { id: "projects", label: "Projects portfolio" },
+  { id: "certifications", label: "Certifications" },
   { id: "curriculum", label: "Curriculum checklist" },
   { id: "skills", label: "Skills & quiz" },
   { id: "interests", label: "Career interests" },
 ];
 
-const linkChips = [
-  { id: "github", label: "GitHub", icon: Github },
-  { id: "linkedin", label: "LinkedIn", icon: Linkedin },
-  { id: "codeforces", label: "Codeforces", icon: Trophy },
-  { id: "leetcode", label: "LeetCode", icon: Code2 },
-];
+const semestersList = Array.from({ length: 10 }, (_, i) => i + 1);
 
 function BuildProfile() {
-  const [semester, setSemester] = useState<number | null>(6);
-  const [active, setActive] = useState<string[]>([]);
+  const [profile, setProfile] = useState<StudentProfile | null>(null);
 
-  const toggleChip = (id: string) =>
-    setActive((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+  useEffect(() => {
+    getStudentProfile().then(setProfile);
+  }, []);
+
+  const handleChange = (key: keyof StudentProfile, value: any) => {
+    if (!profile) return;
+    const updated = { ...profile, [key]: value };
+    setProfile(updated);
+    updateStudentProfile(updated);
+  };
+
+  const handleLinkChange = (linkKey: keyof StudentProfile["links"], value: string) => {
+    if (!profile) return;
+    const updated = {
+      ...profile,
+      links: { ...profile.links, [linkKey]: value },
+    };
+    setProfile(updated);
+    updateStudentProfile(updated);
+  };
+
+  if (!profile) return null;
 
   return (
     <AppShell
       eyebrow="Build my profile"
       title="Everything CourseCompass needs, on one page"
-      description="Scroll top to bottom — seven sections in total. Nothing is hidden behind steps, so you can see exactly what is being asked. You can change any of it later from Profile."
+      description="Scroll top to bottom — nine sections in total. Nothing is hidden behind steps, so you can see exactly what is being asked. You can change any of it later from Profile."
     >
       <div className="grid gap-10 xl:grid-cols-[1fr_15rem] xl:items-start">
         <div className="min-w-0 space-y-8">
-          <Block index={1} id="basics" title="The basics" hint="How you appear across CourseCompass.">
+          <Block index={1} id="basics" title="The basics" hint="How you appear across CourseCompass (IUBAT CSE).">
             <div className="flex items-center gap-5">
               <div className="flex size-20 items-center justify-center rounded-full bg-amber-soft font-display text-xl font-bold">
-                YOU
+                {profile.name.split(" ").map((n) => n[0]).join("")}
               </div>
               <Button variant="outline" className="rounded-xl">
                 <Upload className="mr-2 size-4" /> Upload photo
               </Button>
             </div>
             <div className="grid gap-5 sm:grid-cols-2">
-              <Field label="Full name" placeholder="Nusrat Jahan" />
-              <Field label="Student ID" placeholder="21103042" />
-              <Field label="Program" placeholder="BSc in CSE" />
-              <Field label="Phone · optional" placeholder="+880 1XXXXXXXXX" />
+              <Field label="Full name" value={profile.name} onChange={(v) => handleChange("name", v)} />
+              <Field label="Student ID" value={profile.studentId} onChange={(v) => handleChange("studentId", v)} />
+              <Field label="Program" value={profile.program} onChange={(v) => handleChange("program", v)} />
+              <Field label="Phone" value={profile.phone} onChange={(v) => handleChange("phone", v)} placeholder="+880 17..." />
             </div>
           </Block>
 
-          <Block index={2} id="bio" title="A short bio" hint="Optional. One or two lines is plenty.">
+          <Block index={2} id="bio" title="A short bio" hint="One or two lines about your technical focus.">
             <div className="space-y-2">
               <Label className="eyebrow">Bio</Label>
-              <Textarea rows={4} placeholder="What are you into?" className="resize-none rounded-xl" />
+              <Textarea
+                rows={3}
+                value={profile.bio}
+                onChange={(e) => handleChange("bio", e.target.value)}
+                placeholder="What are you into?"
+                className="resize-none rounded-xl text-sm"
+              />
             </div>
           </Block>
 
@@ -91,23 +116,23 @@ function BuildProfile() {
             index={3}
             id="academic"
             title="Academic standing"
-            hint="Used only to calibrate your roadmap. CGPA stays private."
+            hint="Used to calibrate your roadmap pacing. CGPA stays strictly private."
           >
             <div className="grid gap-5 sm:grid-cols-2">
-              <Field label="CGPA · private" placeholder="3.72" hint="Never shown to anyone else." />
-              <Field label="Expected graduation" placeholder="Spring 2027" />
+              <Field label="CGPA · private" value={String(profile.cgpa)} onChange={(v) => handleChange("cgpa", Number(v) || 3.72)} hint="Never shown to anyone else." />
+              <Field label="Expected graduation" value={profile.expectedGraduation} onChange={(v) => handleChange("expectedGraduation", v)} placeholder="Fall 2027" />
             </div>
             <div className="space-y-3">
               <Label className="eyebrow">Current semester</Label>
               <div className="flex flex-wrap gap-2">
-                {semesters.map((s) => (
+                {semestersList.map((s) => (
                   <button
                     key={s}
                     type="button"
-                    onClick={() => setSemester(s)}
+                    onClick={() => handleChange("semester", s)}
                     className={cn(
                       "size-11 rounded-xl border font-display text-sm font-semibold transition-all",
-                      semester === s
+                      profile.semester === s
                         ? "border-amber bg-amber text-primary-foreground"
                         : "border-border bg-background text-ink-soft hover:border-ink/30",
                     )}
@@ -122,51 +147,46 @@ function BuildProfile() {
           <Block
             index={4}
             id="links"
-            title="Coding profiles"
-            hint="Optional. They sharpen your skill suggestions."
+            title="Coding & Competitive Profiles"
+            hint="Used to sharpen backend skill suggestions and GitHub/LeetCode readiness."
           >
-            <div className="flex flex-wrap gap-2">
-              {linkChips.map((chip) => (
-                <button
-                  key={chip.id}
-                  type="button"
-                  onClick={() => toggleChip(chip.id)}
-                  className={cn(
-                    "flex items-center gap-2 rounded-full border px-4 py-2.5 font-display text-sm transition-all",
-                    active.includes(chip.id)
-                      ? "border-amber bg-amber-soft"
-                      : "border-border bg-background text-ink-soft hover:border-ink/30",
-                  )}
-                >
-                  <chip.icon className="size-4" /> {chip.label}
-                  {active.includes(chip.id) && <Check className="size-3.5 text-amber" />}
-                </button>
-              ))}
+            <div className="grid gap-4 sm:grid-cols-2">
+              <Field label="GitHub URL" value={profile.links.github} onChange={(v) => handleLinkChange("github", v)} placeholder="https://github.com/..." />
+              <Field label="LinkedIn URL" value={profile.links.linkedin} onChange={(v) => handleLinkChange("linkedin", v)} placeholder="https://linkedin.com/in/..." />
+              <Field label="Codeforces Profile" value={profile.links.codeforces} onChange={(v) => handleLinkChange("codeforces", v)} placeholder="username" />
+              <Field label="LeetCode Profile" value={profile.links.leetcode} onChange={(v) => handleLinkChange("leetcode", v)} placeholder="username" />
             </div>
-            {active.length > 0 && (
-              <div className="animate-in fade-in grid gap-5 duration-300 sm:grid-cols-2">
-                {active.map((id) => (
-                  <Field
-                    key={id}
-                    label={linkChips.find((c) => c.id === id)?.label ?? id}
-                    placeholder="username"
-                  />
-                ))}
-              </div>
-            )}
           </Block>
 
           <Block
             index={5}
+            id="projects"
+            title="Projects portfolio"
+            hint="Add personal, capstone, or course engineering projects."
+          >
+            <ProjectsSection />
+          </Block>
+
+          <Block
+            index={6}
+            id="certifications"
+            title="Certifications & courses"
+            hint="Add online certifications, verified skills, or training workshops."
+          >
+            <CertificationsSection />
+          </Block>
+
+          <Block
+            index={7}
             id="curriculum"
             title="Curriculum checklist"
-            hint="Tick what you have finished. Completed courses ask for a quick self-assessment."
+            hint="Tick what you have finished. Completed courses ask for a quick self-assessment rating."
           >
             <CurriculumSection />
           </Block>
 
           <Block
-            index={6}
+            index={8}
             id="skills"
             title="Skills & quiz"
             hint="Rate honestly — the roadmap is only as useful as these numbers are accurate."
@@ -175,16 +195,16 @@ function BuildProfile() {
           </Block>
 
           <Block
-            index={7}
+            index={9}
             id="interests"
             title="Career interests"
-            hint="Pick as many as you like — or none, if you are still figuring it out."
+            hint="Pick the initial career paths you are targeting for IUBAT CSE."
           >
             <InterestsSection />
           </Block>
 
           <div className="rounded-3xl border-2 border-amber bg-amber-soft/40 p-8">
-            <span className="flex size-12 items-center justify-center rounded-2xl bg-background">
+            <span className="flex size-12 items-center justify-center rounded-2xl bg-background shadow-sm">
               <Bot className="size-6 text-amber" />
             </span>
             <h2 className="mt-5 font-display text-3xl leading-tight font-bold">
@@ -262,17 +282,26 @@ function Block({
 
 function Field({
   label,
+  value,
+  onChange,
   placeholder,
   hint,
 }: {
   label: string;
-  placeholder: string;
+  value: string;
+  onChange: (value: string) => void;
+  placeholder?: string;
   hint?: string;
 }) {
   return (
     <div className="space-y-2">
       <Label className="eyebrow">{label}</Label>
-      <Input placeholder={placeholder} className="h-12 rounded-xl" />
+      <Input
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+        className="h-11 rounded-xl text-sm"
+      />
       {hint ? <p className="text-xs text-ink-soft">{hint}</p> : null}
     </div>
   );

@@ -4,9 +4,11 @@ import { Bot, Send } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { profile, progressOverview, roadmap, planning } from "@/data/mock";
 import { cn } from "@/lib/utils";
 import { VantaTopologyBackground } from "@/components/vanta-topology-background";
+import { ChatMessage, StudentProfile } from "@/types";
+import { getStudentProfile } from "@/api/students";
+import { chatWithCourseCompass } from "@/api/chat";
 
 export const Route = createFileRoute("/app/chat")({
   head: () => ({
@@ -27,8 +29,6 @@ export const Route = createFileRoute("/app/chat")({
   component: ChatPage,
 });
 
-type Msg = { id: number; role: "user" | "bot"; text: string };
-
 const prompts = [
   "How is my progress?",
   "What is my biggest skill gap?",
@@ -36,65 +36,71 @@ const prompts = [
   "Am I on track for my target role?",
 ];
 
-function reply(input: string): string {
-  const q = input.toLowerCase();
-  const topGap = [...roadmap.gaps].sort((a, b) => b.required - b.current - (a.required - a.current))[0] ?? {
-    skill: "System design",
-    current: 1,
-    required: 4,
-  };
-
-  if (q.includes("gap") || q.includes("weak")) {
-    return `Your biggest gap right now is **${topGap.skill}** — you rated yourself ${topGap.current}/5 and ${roadmap.targetRole} roles typically expect ${topGap.required}/5. Close that one first, bhai; everything else on your roadmap is within one level.`;
-  }
-  if (q.includes("week") || q.includes("plan") || q.includes("next")) {
-    return `For this week I would keep it to three things:\n1. ${planning.weekly[0]?.title}\n2. ${planning.weekly[1]?.title}\n3. ${planning.weekly[2]?.title}\nSmall and finishable beats ambitious and abandoned.`;
-  }
-  if (q.includes("track") || q.includes("role") || q.includes("job")) {
-    return `You are ${roadmap.percent}% of the way to ${roadmap.targetRole}. ${roadmap.summary} With semester ${profile.semester} coursework counted in, that is a normal place to be — keep the gap list moving and you will be interview-ready before graduation.`;
-  }
-  if (q.includes("progress") || q.includes("credit") || q.includes("course")) {
-    return `Here is your snapshot: ${progressOverview.creditsEarned}/${progressOverview.creditsTotal} credits earned, ${progressOverview.coursesCompleted}/${progressOverview.coursesTotal} courses completed and ${progressOverview.skillsRated} skills rated. That puts you at ${roadmap.percent}% toward ${roadmap.targetRole}.`;
-  }
-  if (q.includes("cgpa") || q.includes("grade")) {
-    return `Your CGPA of ${profile.cgpa.toFixed(2)} stays private — nobody else sees it. It only nudges how aggressive your roadmap pacing is, never what you are allowed to aim for.`;
-  }
-  return `Good question. From what you have filled in — semester ${profile.semester}, ${progressOverview.coursesCompleted} courses done and ${progressOverview.skillsRated} skills rated — the highest-leverage move is still ${topGap.skill}. Ask me about your progress, skill gaps, or this week's plan and I will go deeper.`;
-}
-
 function ChatPage() {
-  const [messages, setMessages] = useState<Msg[]>([
-    {
-      id: 0,
-      role: "bot",
-      text: `Assalamu alaikum ${profile.name.split(" ")[0]}! I am AI Bhai. I have read your profile, curriculum checklist, skills and interests. Ask me anything about where you stand.`,
-    },
-  ]);
+  const [profile, setProfile] = useState<StudentProfile | null>(null);
+  const [targetRole, setTargetRole] = useState<string>("Career Path Exploring");
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [draft, setDraft] = useState("");
   const [typing, setTyping] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    getStudentProfile().then((p) => {
+      setProfile(p);
+      const studentName = p.name ? p.name.split(" ")[0] : "Student";
+      setMessages([
+        {
+          id: 0,
+          role: "bot",
+          text: `Assalamu alaikum ${studentName}! I am AI Bhai. I have loaded your IUBAT CSE academic profile, curriculum checklist, and skills. Ask me anything about what courses to take, skill gaps, or career role recommendations!`,
+        },
+      ]);
+    });
+
+    import("@/api/roadmap").then(({ getRoadmap }) => {
+      getRoadmap().then((r) => {
+        if (r?.targetRole) {
+          setTargetRole(r.targetRole);
+        }
+      });
+    });
+  }, []);
+
+  useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, typing]);
 
-  const send = (text: string) => {
+  const send = async (text: string) => {
     const clean = text.trim();
     if (!clean || typing) return;
-    setMessages((prev) => [...prev, { id: Date.now(), role: "user", text: clean }]);
+    
+    const userMsg: ChatMessage = { id: Date.now(), role: "user", text: clean };
+    setMessages((prev) => [...prev, userMsg]);
     setDraft("");
     setTyping(true);
-    setTimeout(() => {
-      setMessages((prev) => [...prev, { id: Date.now() + 1, role: "bot", text: reply(clean) }]);
+
+    try {
+      const response = await chatWithCourseCompass(clean, {
+        student: profile || undefined,
+        targetRole: targetRole || "Career Path Exploring",
+      });
+      setMessages((prev) => [...prev, response]);
+    } catch (err) {
+      setMessages((prev) => [
+        ...prev,
+        { id: Date.now() + 1, role: "bot", text: "Unable to reach CourseCompass AI service. Please try again later." },
+      ]);
+    } finally {
       setTyping(false);
-    }, 750);
+    }
+
   };
 
   return (
     <AppShell
       eyebrow="AI Bhai"
       title="Talk through your progress"
-      description="A study companion that already knows your curriculum, skills and interests. This demo answers from your CourseCompass data."
+      description="A study companion that already knows your curriculum, skills and interests. Connected to CourseCompass API service."
     >
       <VantaTopologyBackground className="rounded-3xl border border-border/80 p-2 shadow-[var(--shadow-lift)]">
         <div className="card-soft mx-auto flex h-[calc(100vh-18rem)] max-w-3xl flex-col overflow-hidden bg-surface/85 backdrop-blur-xl border border-border/60">

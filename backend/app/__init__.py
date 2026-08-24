@@ -1,0 +1,1 @@
+# CourseCompass FastAPI Backend Application

@@ -1,5 +1,5 @@
-import { useMemo, useState } from "react";
-import { ChevronDown, Star } from "lucide-react";
+import { useEffect, useMemo, useState } from "react";
+import { ChevronDown, Star, Info, BookOpen } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   Select,
@@ -8,13 +8,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  courses as seedCourses,
-  grades,
-  semesters,
-  type Course,
-  type CourseStatus,
-} from "@/data/mock";
+import { grades } from "@/data/mock";
+import { Course, CourseStatus } from "@/types";
+import { getCourses, updateCourseStatus, updateCourseGrade, updateCourseRating } from "@/api/courses";
 import { cn } from "@/lib/utils";
 
 const statusLabel: Record<CourseStatus, string> = {
@@ -23,24 +19,41 @@ const statusLabel: Record<CourseStatus, string> = {
   "not-started": "Not started",
 };
 
+const semesters = Array.from({ length: 10 }, (_, i) => i + 1);
+
 export function CurriculumSection() {
-  const [courses, setCourses] = useState<Course[]>(seedCourses);
+  const [courses, setCourses] = useState<Course[]>([]);
   const [open, setOpen] = useState<number[]>([6]);
   const [bulk, setBulk] = useState<string>("");
+
+  useEffect(() => {
+    getCourses().then(setCourses);
+  }, []);
 
   const grouped = useMemo(
     () => semesters.map((s) => ({ semester: s, items: courses.filter((c) => c.semester === s) })),
     [courses],
   );
 
-  const update = (code: string, patch: Partial<Course>) =>
+  const update = async (code: string, patch: Partial<Course>) => {
     setCourses((prev) => prev.map((c) => (c.code === code ? { ...c, ...patch } : c)));
+    if (patch.status) await updateCourseStatus(code, patch.status);
+    if (patch.grade) await updateCourseGrade(code, patch.grade);
+    if (patch.rating !== undefined) await updateCourseRating(code, patch.rating);
+  };
 
   const applyBulk = (value: string) => {
     setBulk(value);
     const upto = Number(value);
     setCourses((prev) =>
-      prev.map((c) => (c.semester <= upto ? { ...c, status: "completed", rating: c.rating ?? 3 } : c)),
+      prev.map((c) => {
+        if (c.semester <= upto) {
+          const updated = { ...c, status: "completed" as CourseStatus, rating: c.rating ?? 3 };
+          updateCourseStatus(c.code, "completed");
+          return updated;
+        }
+        return c;
+      }),
     );
   };
 
@@ -127,9 +140,11 @@ function CourseRow({
   course: Course;
   onUpdate: (code: string, patch: Partial<Course>) => void;
 }) {
+  const [showDetails, setShowDetails] = useState(false);
   const isDone = course.status === "completed";
+  
   return (
-    <div className="border-b border-border/70 px-5 py-2 last:border-b-0">
+    <div className="border-b border-border/70 px-5 py-3 last:border-b-0">
       <div className="flex items-center gap-3">
         <Checkbox
           checked={isDone}
@@ -142,7 +157,16 @@ function CourseRow({
           className="transition-transform duration-150 data-[state=checked]:scale-110"
         />
         <span className="w-20 font-display text-xs font-semibold text-ink-soft">{course.code}</span>
-        <span className="flex-1 truncate text-sm">{course.title}</span>
+        <span className="flex-1 text-sm font-medium">{course.title}</span>
+        <span className="text-xs text-ink-soft hidden sm:inline">{course.credits} Credits</span>
+        <button
+          type="button"
+          onClick={() => setShowDetails(!showDetails)}
+          className="text-ink-soft hover:text-ink transition-colors p-1"
+          title="View Course Outcomes & Details"
+        >
+          <Info className="size-4" />
+        </button>
         <span
           className={cn(
             "rounded-full px-2.5 py-0.5 font-display text-[0.65rem] tracking-wider uppercase",
@@ -154,6 +178,40 @@ function CourseRow({
           {statusLabel[course.status]}
         </span>
       </div>
+
+      {showDetails && (
+        <div className="mt-2.5 pl-9 pr-4 py-3 rounded-xl bg-secondary/40 border border-border/50 text-xs space-y-2">
+          {course.prerequisite && (
+            <p className="text-ink-soft">
+              <strong className="text-foreground">Prerequisite:</strong> {course.prerequisite}
+            </p>
+          )}
+          {course.description && (
+            <p className="text-ink-soft">
+              <strong className="text-foreground">Description:</strong> {course.description}
+            </p>
+          )}
+          {course.courseOutcomes && course.courseOutcomes.length > 0 && (
+            <div>
+              <strong className="text-foreground">Course Outcomes (CO):</strong>
+              <ul className="list-disc pl-4 mt-1 space-y-0.5 text-ink-soft">
+                {course.courseOutcomes.map((co, i) => (
+                  <li key={i}>{co}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {course.skillsCovered && course.skillsCovered.length > 0 && (
+            <div className="flex flex-wrap gap-1.5 pt-1">
+              {course.skillsCovered.map((skill) => (
+                <span key={skill} className="px-2 py-0.5 rounded-md bg-background border border-border text-[0.68rem] font-medium text-ink-soft">
+                  {skill}
+                </span>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       {isDone && (
         <div className="animate-in fade-in mt-2 mb-1 flex flex-wrap items-center gap-6 pl-9 duration-200">

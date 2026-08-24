@@ -1,9 +1,12 @@
 import { Link } from "@tanstack/react-router";
-import { Compass } from "lucide-react";
+import { Compass, User, LogOut } from "lucide-react";
 import { institution, landingFooterLinks } from "@/data/mock";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/lib/auth";
 
 export function SiteHeader() {
+  const { isAuthenticated, profile, logout } = useAuth();
+
   return (
     <header className="sticky top-0 z-50 px-6 pt-5">
       <div className="mx-auto flex max-w-6xl items-center gap-8 rounded-full border border-border bg-surface/85 px-6 py-3 shadow-[var(--shadow-soft)] backdrop-blur-md">
@@ -19,17 +22,42 @@ export function SiteHeader() {
           {institution.name} · Department of CSE
         </span>
         <div className="ml-auto flex items-center gap-2">
-          <Button asChild variant="ghost" className="rounded-full font-display text-sm">
-            <Link to="/signup">Sign up</Link>
-          </Button>
-          <Button asChild className="rounded-full font-display text-sm">
-            <Link to="/app/build-profile">Build your profile</Link>
-          </Button>
+          {isAuthenticated ? (
+            <>
+              <Button asChild variant="ghost" className="rounded-full font-display text-sm gap-2">
+                <Link to="/app/progress">Dashboard</Link>
+              </Button>
+              <Button asChild className="rounded-full font-display text-sm gap-2">
+                <Link to="/app/profile">
+                  <User className="size-3.5" /> {profile?.name ? profile.name.split(" ")[0] : "Profile"}
+                </Link>
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={logout}
+                className="rounded-full text-xs font-medium text-ink-soft hover:text-destructive"
+                title="Sign out"
+              >
+                <LogOut className="size-3.5" />
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button asChild variant="ghost" className="rounded-full font-display text-sm">
+                <Link to="/signin">Sign in</Link>
+              </Button>
+              <Button asChild className="rounded-full font-display text-sm">
+                <Link to="/signup">Sign up</Link>
+              </Button>
+            </>
+          )}
         </div>
       </div>
     </header>
   );
 }
+
 
 export function SiteFooter() {
   return (

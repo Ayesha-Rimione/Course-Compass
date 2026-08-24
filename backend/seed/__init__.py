@@ -1,0 +1,1 @@
+# CourseCompass Seed Module

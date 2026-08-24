@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import {
   BarChart3,
@@ -10,7 +11,8 @@ import {
 } from "lucide-react";
 import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
-import { profile } from "@/data/mock";
+import { StudentProfile } from "@/types";
+import { getStudentProfile } from "@/api/students";
 
 const nav = [
   { to: "/app/progress", label: "Progress", icon: BarChart3 },
@@ -33,6 +35,15 @@ export function AppShell({
   children: ReactNode;
 }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const [profile, setProfile] = useState<StudentProfile | null>(null);
+
+  useEffect(() => {
+    getStudentProfile().then(setProfile);
+  }, []);
+
+  const initials = profile?.name
+    ? profile.name.split(" ").map((n) => n[0]).join("")
+    : "NJ";
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -76,18 +87,15 @@ export function AppShell({
         <div className="mt-auto rounded-2xl border border-border bg-background p-3">
           <div className="flex items-center gap-3">
             <span className="flex size-9 items-center justify-center rounded-full bg-amber-soft font-display text-sm font-bold">
-              {profile.name
-                .split(" ")
-                .map((n) => n[0])
-                .join("")}
+              {initials}
             </span>
             <div className="min-w-0">
-              <p className="truncate font-display text-sm font-semibold">{profile.name}</p>
-              <p className="truncate text-xs text-ink-soft">{profile.studentId}</p>
+              <p className="truncate font-display text-sm font-semibold">{profile?.name || "Loading..."}</p>
+              <p className="truncate text-xs text-ink-soft">{profile?.studentId || "21103042"}</p>
             </div>
           </div>
           <p className="mt-3 flex items-center gap-1.5 text-[0.7rem] text-ink-soft">
-            <GraduationCap className="size-3.5" /> Semester {profile.semester}
+            <GraduationCap className="size-3.5" /> Semester {profile?.semester || 6} · IUBAT CSE
           </p>
         </div>
       </aside>

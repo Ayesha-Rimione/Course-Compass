@@ -1,10 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ExternalLink, HelpCircle } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { planning, type Recommendation } from "@/data/mock";
+import { Recommendation } from "@/data/mock";
+import { getPlanningRecommendations } from "@/api/roadmap";
 import { cn } from "@/lib/utils";
 
 export const Route = createFileRoute("/app/planning")({
@@ -19,7 +20,7 @@ export const Route = createFileRoute("/app/planning")({
       { property: "og:description", content: "Small, checkable steps that close your skill gaps." },
     ],
   }),
-  component: Planning,
+  component: PlanningPage,
 });
 
 const tabs = [
@@ -28,7 +29,15 @@ const tabs = [
   { id: "semester", label: "Semester" },
 ] as const;
 
-function Planning() {
+function PlanningPage() {
+  const [data, setData] = useState<Record<"weekly" | "monthly" | "semester", Recommendation[]> | null>(null);
+
+  useEffect(() => {
+    getPlanningRecommendations().then(setData);
+  }, []);
+
+  if (!data) return null;
+
   return (
     <AppShell
       eyebrow="Planning"
@@ -45,7 +54,7 @@ function Planning() {
         </TabsList>
         {tabs.map((t) => (
           <TabsContent key={t.id} value={t.id} className="mt-5 space-y-3">
-            {planning[t.id].map((rec) => (
+            {data[t.id].map((rec) => (
               <RecCard key={rec.id} rec={rec} />
             ))}
           </TabsContent>
