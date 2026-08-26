@@ -16,6 +16,9 @@ dist-ssr
 .nitro
 *.local
 
+# Vercel
+.vercel
+
 # Wrangler / Cloudflare
 .wrangler/
 .dev.vars
@@ -42,6 +45,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 .venv/
+venv/
 backend/venv/
 .pytest_cache/
 
