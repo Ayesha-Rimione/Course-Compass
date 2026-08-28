@@ -147,3 +147,20 @@ def auth_headers_b(db_session):
 
     token = create_access_token(data={"sub": user.id, "email": user.email})
     return {"Authorization": f"Bearer {token}"}
+
+
+@pytest.fixture
+def admin_auth_headers(db_session):
+    from app.models.users import UserRole
+    user = db_session.query(User).filter(User.email == "admin@iubat.edu").first()
+    if not user:
+        user = User(email="admin@iubat.edu", role=UserRole.ADMIN, is_active=True)
+        db_session.add(user)
+        db_session.flush()
+    else:
+        user.role = UserRole.ADMIN
+        db_session.flush()
+
+    token = create_access_token(data={"sub": user.id, "email": user.email})
+    return {"Authorization": f"Bearer {token}"}
+

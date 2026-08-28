@@ -21,6 +21,7 @@ const nav = [
   { to: "/app/roadmap", label: "Roadmap", icon: Compass },
   { to: "/app/planning", label: "Planning", icon: CalendarRange },
   { to: "/app/profile", label: "Profile", icon: UserRound },
+  { to: "/app/admin", label: "CSE Admin", icon: GraduationCap },
 ] as const;
 
 export function AppShell({
@@ -77,7 +78,15 @@ export function AppShell({
                     active ? "opacity-100" : "opacity-0",
                   )}
                 />
-                <item.icon className={cn("size-4", active && "text-amber")} />
+                {item.to === "/app/chat" ? (
+                  <img
+                    src="/Gemini_Generated_Image_p23qa7p23qa7p23q.jpg"
+                    alt="AI Bhai"
+                    className="size-4 rounded-full object-cover object-top border border-amber/60 shrink-0"
+                  />
+                ) : (
+                  <item.icon className={cn("size-4", active && "text-amber")} />
+                )}
                 {item.label}
               </Link>
             );

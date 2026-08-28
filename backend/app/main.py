@@ -18,6 +18,7 @@ from app.routers import (
     recommendations_router,
     ai_context_router,
     chat_router,
+    admin_router,
 )
 
 # Initialize database tables if not created via migrations
@@ -89,6 +90,7 @@ app.include_router(planning_router)
 app.include_router(recommendations_router)
 app.include_router(ai_context_router)
 app.include_router(chat_router)
+app.include_router(admin_router)
 
 
 @app.get("/", include_in_schema=False)

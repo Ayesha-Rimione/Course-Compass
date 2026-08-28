@@ -85,7 +85,7 @@ function ProfilePage() {
               <div className="mt-5 space-y-4">
                 <EditField label="Full name" value={profile.name} onChange={(v) => setProfile({ ...profile, name: v })} />
                 <EditField label="Email" value={profile.email} onChange={(v) => setProfile({ ...profile, email: v })} />
-                <EditField label="Phone" value={profile.phone} onChange={(v) => setProfile({ ...profile, phone: v })} />
+                <EditField label="Phone (optional)" value={profile.phone || ""} onChange={(v) => setProfile({ ...profile, phone: v })} />
                 <div className="space-y-2">
                   <Label className="eyebrow">Bio</Label>
                   <Textarea

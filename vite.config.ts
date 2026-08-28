@@ -25,5 +25,8 @@ export default defineConfig({
   server: {
     host: "::",
     port: 8080,
+    watch: {
+      ignored: ["**/*.csv", "**/*.xlsx", "**/*.db", "**/*.sqlite", "**/supabase/**"],
+    },
   },
 });

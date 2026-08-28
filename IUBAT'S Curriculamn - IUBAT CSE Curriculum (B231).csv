@@ -1,0 +1,286 @@
+Course Code,Course Name,Credit Hours,Semester,Description,Topics / Skills,Projects / Assignments,CO1,CO2,CO3,CO4,CO5
+ENG 101,Basic English Composition,4,1,"Foundational course in English grammar, paragraph and essay structure, and academic writing conventions.","• Paragraph structure
+• Grammar & sentence construction
+• Academic writing conventions
+• Peer editing & revision","• Short essays
+• In-class writing exercises
+• Peer review workshops",Construct grammatically correct sentences and paragraphs,Organize ideas into a structured essay,Apply basic academic writing conventions,Revise written work based on feedback,
+CSC 103,Fundamentals of Computers and Applications,3,1,"Introduces computer hardware/software basics, operating systems, and common productivity applications.","• Computer hardware basics
+• OS fundamentals
+• Word processing & spreadsheets
+• File management
+• Internet basics","• Document formatting exercise
+• Spreadsheet data-entry assignment",Identify core computer hardware and software components,Operate common productivity applications,Manage files and folders effectively,Describe basic internet and networking concepts,
+CSC 104,Computer Applications Lab,1,1,"Hands-on lab pairing CSC 103, practicing office productivity software and basic computer operations.","• Word processing practice
+• Spreadsheet formulas
+• Basic presentation software
+• File organization","• Formatted document lab
+• Spreadsheet calculation lab
+• Slide deck exercise",Demonstrate proficiency in word processing software,Build spreadsheets using basic formulas,Create a simple slide presentation,,
+ENV 103,Environmental Science,2,1,"Survey of ecological principles, environmental issues, and sustainability concepts.","• Ecosystems & biodiversity
+• Pollution & climate change
+• Sustainability principles
+• Environmental policy basics","• Environmental issue report
+• Class discussion/case study",Explain fundamental ecological concepts,Identify major environmental issues,Discuss sustainability practices relevant to technology and industry,,
+ART 102,Educational Planning,1,1,Orientation course helping students plan their academic path and set goals for university life.,"• Academic goal-setting
+• Time management
+• University resources & policies",• Personal academic plan document,Develop a personal academic plan,Apply basic time-management techniques,Identify university academic support resources,,
+ART 103,Professional Etiquette and Grooming,0,3,"Non-credit orientation course covering professional conduct, communication etiquette, and presentation.","• Workplace etiquette
+• Professional communication
+• Personal presentation standards",• Mock professional interaction exercise,Demonstrate appropriate professional etiquette,Apply grooming and presentation standards expected in professional settings,,,
+ART 204,Modern Living,2,1,"General studies course examining contemporary social, cultural, and lifestyle topics relevant to modern life.","• Contemporary social issues
+• Cultural awareness
+• Personal finance basics
+• Health & well-being","• Reflective essay
+• Group discussion presentation",Discuss contemporary social and cultural issues,Apply basic personal-finance concepts,Reflect on lifestyle choices affecting well-being,,
+CSC 183,Programming C,3,2,"Introduction to procedural programming using C, covering syntax, control flow, and basic data structures.","• Variables & data types
+• Control flow (loops/conditionals)
+• Functions
+• Arrays & pointers
+• Basic I/O","• Calculator program
+• Array-based data processing program
+• Small command-line utility",Write and debug C programs using core control structures,Implement functions and manage scope,Use arrays and pointers for data manipulation,,
+CSC 184,Programming C Lab,1,2,"Lab component of CSC 183, focused on hands-on implementation and debugging of C programs.","• Compiling & debugging C code
+• Function implementation
+• Pointer exercises","• Weekly lab programming exercises
+• Small console application",Implement working C programs from specification,Debug common syntax and logic errors independently,,,
+ENG 102,English Comprehensions and Speaking,3,2,"Builds on ENG 101 with focus on reading comprehension, oral communication, and presentation skills.","• Reading comprehension strategies
+• Oral presentation skills
+• Public speaking basics
+• Listening skills","• Oral presentation
+• Reading comprehension assessments",Summarize and interpret written texts,Deliver a structured oral presentation,Apply active-listening techniques,,
+MAT 147,Applied Calculus,3,2,Covers differential and integral calculus with applications relevant to engineering and computing.,"• Limits & derivatives
+• Integration techniques
+• Applications of calculus
+• Series & sequences (intro)","• Problem sets
+• Applied calculus case study",Compute derivatives and integrals of standard functions,Apply calculus to solve rate-of-change and optimization problems,Interpret graphical representations of functions,,
+CSC 283,Programming (C++),3,3,"Introduces object-oriented programming concepts using C++, building on procedural C foundations.","• OOP fundamentals (classes/objects)
+• Inheritance & polymorphism
+• Encapsulation
+• Standard Template Library (intro)
+• Memory management basics","• Class-based simulation program
+• Inheritance hierarchy project
+• Small OOP application",Design classes using encapsulation and abstraction,Apply inheritance and polymorphism,Implement basic C++ programs using OOP principles,,
+CSC 284,Programming Lab (C++),1,3,Lab component of CSC 283 focused on implementing object-oriented C++ programs.,"• Class implementation practice
+• Debugging OOP code
+• STL container usage","• Weekly OOP lab exercises
+• Small class-hierarchy project",Implement class hierarchies in C++,Debug object-oriented programs,,,
+ENG 203,Advanced English Composition,3,3,"Advanced academic and technical writing, including research-based and argumentative essays.","• Argumentative writing
+• Research & citation basics
+• Technical writing conventions
+• Editing for clarity","• Research-based essay
+• Technical report draft",Construct well-supported argumentative essays,Apply proper citation practices,Produce clear technical writing,,
+MAT 219,Linear Algebra,2,3,"Introduces vectors, matrices, and linear transformations with applications to computing and data science.","• Vectors & matrix operations
+• Systems of linear equations
+• Eigenvalues & eigenvectors
+• Linear transformations","• Matrix computation problem sets
+• Applied linear-algebra case study (e.g. transformations in graphics)",Perform matrix operations and solve linear systems,Compute eigenvalues and eigenvectors,Apply linear algebra concepts to computing applications,,
+PHY 111,Physics,3,3,"Introductory physics covering mechanics, energy, and basic electromagnetism relevant to engineering students.","• Kinematics & dynamics
+• Energy & work
+• Basic electromagnetism
+• Waves (intro)","• Physics lab problem sets
+• Applied physics report",Apply Newtonian mechanics to solve motion problems,Explain energy conservation principles,Describe basic electromagnetic phenomena,,
+PHY 112,Physics Lab,1,3,Lab component of PHY 111 with hands-on experiments in mechanics and basic electromagnetism.,"• Experimental measurement techniques
+• Data recording & analysis
+• Basic circuit experiments","• Lab experiment reports
+• Measurement & error-analysis exercise",Conduct basic physics experiments accurately,Record and analyze experimental data,Report findings in a structured lab report,,
+CSC 231,Fundamentals of Electronics and Digital,3,5,Covers basic electronics and digital logic concepts foundational to computer hardware.,"• Basic circuit theory
+• Digital logic gates
+• Number systems
+• Combinational logic (intro)","• Digital logic problem sets
+• Basic circuit design exercise",Explain fundamental electronic circuit concepts,Analyze basic digital logic circuits,Convert between number systems used in digital systems,,
+CSC 232,Electronics and Digital Lab,1,5,"Lab component of CSC 231, hands-on construction and testing of basic digital circuits.","• Breadboard circuit building
+• Logic gate testing
+• Basic circuit troubleshooting","• Digital circuit lab exercises
+• Simple logic circuit build",Build and test basic digital logic circuits,Troubleshoot simple circuit faults,,,
+CSC 391,Data Structures and Algorithms,4,4,Core course covering fundamental data structures and algorithm design/analysis techniques.,"• Arrays, linked lists, stacks & queues
+• Trees & graphs
+• Sorting & searching algorithms
+• Algorithm complexity (Big-O)
+• Recursion","• Custom data structure implementation
+• Sorting algorithm comparison project
+• Graph traversal implementation",Implement core data structures from scratch,Analyze algorithm time/space complexity,Apply appropriate data structures to solve computational problems,Design and implement sorting and searching algorithms,
+ELP 002,Intermediate English,0,4,Non-credit supplementary English language course for students needing additional language support.,"• Grammar reinforcement
+• Vocabulary building
+• Basic conversational English",• Language practice exercises,Apply intermediate-level English grammar,Communicate using expanded vocabulary,,,
+MAT 247,Numerical Analysis,3,4,Covers numerical methods for solving mathematical problems computationally.,"• Root-finding methods
+• Numerical integration/differentiation
+• Interpolation
+• Error analysis","• Numerical method implementation (e.g., in Python/C)
+• Comparative accuracy analysis",Implement numerical methods for root-finding and integration,Analyze error and convergence of numerical methods,Apply interpolation techniques to data,,
+STA 240,Statistics,3,4,Introduces probability and statistics concepts foundational to data analysis and machine learning.,"• Descriptive statistics
+• Probability distributions
+• Hypothesis testing
+• Regression basics","• Statistical analysis of a dataset
+• Probability problem sets",Compute descriptive statistics from data,Apply probability distributions to model uncertainty,Conduct basic hypothesis tests,Interpret regression results,
+BUS 201,Business Communications,3,5,Focuses on professional written and verbal communication in business/workplace contexts.,"• Business writing (memos, reports, emails)
+• Professional presentations
+• Workplace communication etiquette","• Business report writing
+• Mock professional presentation",Draft professional business documents,Deliver an effective workplace presentation,Apply appropriate business communication etiquette,,
+CHM 117,General Chemistry,3,6,"Introductory chemistry covering atomic structure, chemical bonding, and reactions.","• Atomic structure
+• Chemical bonding
+• Reaction types & stoichiometry
+• States of matter","• Chemistry problem sets
+• Applied chemistry report",Explain atomic structure and bonding,Balance and interpret chemical equations,Describe properties of different states of matter,,
+CHM 118,Chemistry Lab,1,6,Lab component of CHM 117 with hands-on experiments in basic chemical reactions and measurement.,"• Lab safety & technique
+• Titration & measurement
+• Basic reaction experiments",• Chemistry lab reports,Conduct basic chemistry experiments safely,Record and interpret experimental results,,,
+PHI 114,Introduction to Philosophy,3,6,"Survey of major philosophical questions, reasoning methods, and ethical frameworks.","• Logic & argumentation
+• Ethical frameworks
+• Epistemology basics
+• Philosophy of mind (intro)","• Philosophical argument essay
+• Class debate",Construct logically valid arguments,Analyze ethical frameworks applied to real scenarios,Critically evaluate philosophical positions,,
+CSC 197,Assembly Language,3,4,Introduces low-level programming concepts using assembly language and processor architecture basics.,"• CPU registers & memory addressing
+• Instruction sets
+• Low-level program flow
+• Assembly-to-machine code mapping","• Assembly language programs (arithmetic, loops)
+• Register-level debugging exercise",Write basic assembly language programs,Explain how high-level constructs map to low-level instructions,Debug programs at the register/memory level,,
+CSC 247,Computer Organization and Architecture,3,5,"Covers CPU architecture, memory hierarchy, and instruction execution at the hardware level.","• CPU architecture
+• Memory hierarchy & caching
+• Instruction pipelines
+• I/O organization","• CPU simulation exercise
+• Memory hierarchy performance analysis",Explain CPU architecture and instruction execution,Analyze memory hierarchy performance trade-offs,Describe pipelining and its effect on performance,,
+CSC 329,Logic Design and Switching Circuits,3,5,Advanced digital logic design covering combinational and sequential circuits.,"• Combinational circuit design
+• Sequential circuits & flip-flops
+• State machines
+• Karnaugh maps","• Sequential circuit design project
+• State machine implementation",Design combinational logic circuits using minimization techniques,Design sequential circuits using flip-flops,Model systems as finite state machines,,
+CSC 330,Logic Lab,1,5,"Lab component of CSC 329, hands-on design and testing of digital logic circuits.","• Circuit simulation tools
+• Sequential circuit testing
+• State machine verification",• Digital logic lab builds,Implement and test sequential logic circuits,Verify circuit behavior against a design specification,,,
+CSC 433,Database Management Systems,3,7,"Covers relational database theory, design, and query languages.","• Relational model
+• ER modeling
+• Normalization
+• SQL querying
+• Transactions & concurrency (intro)","• Database schema design project
+• SQL query assignment set",Design a normalized relational database schema,Write SQL queries to retrieve and manipulate data,Explain transaction and concurrency concepts,,
+CSC 434,Database Management Systems Lab,1,7,"Lab component of CSC 433, hands-on database implementation and querying.","• SQL DDL/DML practice
+• Database implementation in a RDBMS
+• Query optimization basics",• Hands-on database build and query lab,Implement a relational database from a schema design,Execute and optimize SQL queries,,,
+MAT 257,Discrete Mathematics,3,5,"Covers discrete structures foundational to computer science: logic, sets, graphs, and combinatorics.","• Propositional & predicate logic
+• Set theory
+• Graph theory
+• Combinatorics
+• Proof techniques","• Proof-writing problem sets
+• Graph theory application exercise",Construct formal logical proofs,Apply graph theory to model computational problems,Solve combinatorics problems relevant to algorithm analysis,,
+CSC 215,Engineering Ethics,1,8,Introduces ethical principles and professional responsibility in engineering and technology practice.,"• Professional codes of ethics
+• Case studies in engineering ethics
+• Ethical decision-making frameworks",• Ethics case study analysis,Apply ethical frameworks to engineering decision-making,Analyze real-world engineering ethics case studies,,,
+CSC 307,Operating System,3,7,"Covers operating system concepts including process management, memory management, and file systems.","• Process & thread management
+• CPU scheduling
+• Memory management & virtual memory
+• File systems
+• Synchronization & deadlocks","• Process scheduling simulation
+• Synchronization problem implementation (e.g., producer-consumer)",Explain process and memory management in an OS,Implement CPU scheduling algorithms,Analyze synchronization problems and deadlock conditions,,
+CSC 347,Computer Hardware and Maintenance,2,9,"Practical course on computer hardware components, assembly, and troubleshooting.","• Hardware components & assembly
+• Troubleshooting techniques
+• Preventive maintenance
+• Peripheral devices",• Hardware assembly/diagnostic exercise,Assemble and configure computer hardware components,Diagnose and resolve common hardware faults,,,
+CSC 348,Hardware Lab,2,9,"Lab component of CSC 347, hands-on hardware assembly and diagnostics.","• Hands-on hardware assembly
+• Diagnostic tool usage
+• Component testing","• Hardware build lab
+• Diagnostic troubleshooting exercise",Perform hands-on hardware assembly and testing,Use diagnostic tools to identify hardware faults,,,
+EEN 183,Circuit Analysis,3,8,Covers analysis of electrical circuits including DC/AC circuit theory.,"• DC circuit analysis
+• AC circuit theory
+• Circuit theorems (Thevenin/Norton)
+• Basic filters","• Circuit analysis problem sets
+• Circuit simulation exercise",Analyze DC and AC circuits using standard techniques,Apply circuit theorems to simplify complex circuits,,,
+EEN 184,Circuit Lab I,1,8,"Lab component of EEN 183, hands-on circuit construction and measurement.","• Circuit building & measurement
+• Oscilloscope/multimeter usage
+• Basic filter testing",• Circuit lab experiments,Build and measure basic electrical circuits,Use standard lab instruments for circuit analysis,,,
+ART 202,Career Planning and Development-I,1,11,Early career-planning course helping students explore career paths and build professional foundations.,"• Career exploration
+• Resume basics
+• Professional goal-setting","• Draft resume/CV
+• Career exploration report",Draft a professional resume,Identify career paths aligned with personal interests and skills,,,
+CSC 387,System Analysis and Design,3,9,"Covers methodologies for analyzing and designing information systems, including requirements and modeling.","• Requirements gathering
+• System modeling (DFD/UML)
+• SDLC methodologies
+• Design documentation","• System analysis case study
+• Requirements/design document for a sample system",Gather and document system requirements,Model a system using standard diagramming techniques,Apply an SDLC methodology to a system design case study,,
+CSE 3391,Web Engineering,3,8,"Covers principles of designing, building, and engineering web-based applications and systems.","• Web architecture
+• Frontend/backend fundamentals
+• HTTP & client-server model
+• Web application design principles","• Multi-page web application project
+• Client-server web app prototype",Design a web application architecture,Implement a functional client-server web application,Apply web engineering principles to a project,,
+ENG 250,Public Speaking,3,6,Develops formal public speaking and presentation skills for academic and professional contexts.,"• Speech structuring
+• Delivery techniques
+• Audience engagement
+• Handling Q&A","• Formal public speech
+• Persuasive presentation",Deliver a structured formal speech,Apply effective vocal and body-language delivery techniques,Engage an audience and handle questions confidently,,
+CSC 439,Visual Programming,3,9,Covers GUI-based application development using visual programming environments.,"• GUI design principles
+• Event-driven programming
+• Form/control-based development
+• Visual IDE tooling",• Desktop GUI application project,Design a graphical user interface for an application,Implement event-driven program logic,Build a functioning desktop application using a visual IDE,,
+CSC 440,Visual Programming Lab,1,9,"Lab component of CSC 439, hands-on GUI application development.","• Hands-on GUI building
+• Event-handler implementation",• GUI application lab exercises,Implement working GUI components,Debug event-driven application logic,,,
+CSE 4357,Principles and Techniques of Data Science,3,7,"Introduces the data science pipeline: data collection, cleaning, analysis, and visualization.","• Data cleaning & preprocessing
+• Exploratory data analysis
+• Data visualization
+• Intro to predictive modeling","• End-to-end data analysis project on a real/sample dataset
+• Data visualization dashboard",Clean and preprocess a raw dataset,Perform exploratory data analysis,Build visualizations to communicate data insights,Apply a basic predictive model to a dataset,
+CSE 4385,Computer Vision and Image Processing,3,7,Covers fundamentals of digital image processing and computer vision techniques.,"• Image representation & filtering
+• Edge detection
+• Feature extraction
+• Basic object detection concepts","• Image filtering/processing project
+• Basic object detection exercise",Apply image processing filters to digital images,Implement edge/feature detection techniques,Explain fundamental computer vision pipeline concepts,,
+CSC 488,Thesis,3,9,"Independent research project applying CSE knowledge to a self-defined problem, under faculty supervision.","• Research methodology
+• Literature review
+• Technical writing & documentation
+• Project/system implementation","• Thesis proposal
+• Implemented thesis project/system
+• Final thesis report & defense",Formulate a research problem and literature review,Design and implement a solution to the research problem,Document and defend findings in a formal thesis report,,
+CSC 397,Theory of Computation,4,9,"Covers formal models of computation, automata theory, and computability/complexity.","• Finite automata & regular languages
+• Context-free grammars
+• Turing machines
+• Computability & complexity (intro)","• Automata design problem sets
+• Formal language proof assignments",Design finite automata for given languages,Prove properties of formal languages,Explain computability and complexity fundamentals,,
+CSC 437,Compiler Design,3,10,Covers the phases of compiler construction from lexical analysis to code generation.,"• Lexical analysis
+• Parsing (syntax analysis)
+• Semantic analysis
+• Intermediate code generation
+• Optimization basics","• Simple lexer/parser implementation
+• Mini-compiler project for a small language",Implement a lexical analyzer for a simple language,Build a parser using a standard parsing technique,Explain the stages of a compiler pipeline,,
+CSC 465,Data Communication and Computer Network,3,10,"Covers networking fundamentals including protocols, topologies, and the OSI/TCP-IP models.","• OSI & TCP/IP models
+• Network protocols (TCP/UDP/IP)
+• Routing & switching basics
+• Network security fundamentals","• Network simulation exercise
+• Protocol analysis assignment",Explain the OSI and TCP/IP models,Analyze network protocol behavior,Describe basic network security concepts,,
+CSC 466,Network Lab,1,10,"Lab component of CSC 465, hands-on network configuration and analysis.","• Network configuration tools
+• Packet analysis (e.g. Wireshark-style)
+• Basic routing setup","• Network configuration lab
+• Packet capture analysis exercise",Configure basic network settings and routing,Analyze captured network traffic,,,
+CSE 4383,Artificial Intelligence and Expert Systems,3,10,"Introduces AI fundamentals including search algorithms, knowledge representation, and expert systems.","• Search algorithms
+• Knowledge representation
+• Expert system rule-based reasoning
+• Intro to machine learning concepts","• Search algorithm implementation
+• Simple rule-based expert system project",Implement classic AI search algorithms,Design a knowledge representation for a problem domain,Build a simple rule-based expert system,,
+CSC 471,Microprocessor Design,3,11,"Covers microprocessor architecture, instruction execution, and interfacing with peripheral systems.","• Microprocessor architecture
+• Instruction cycles
+• Memory & I/O interfacing
+• Embedded system basics","• Microprocessor interfacing project
+• Simple embedded system design",Explain microprocessor architecture and instruction execution,Design a basic microprocessor interfacing circuit,Apply embedded system design principles,,
+CSC 469,Software Engineering,3,11,"Covers software development lifecycle, requirements engineering, design, and project management practices.","• SDLC models (Agile/Waterfall)
+• Requirements engineering
+• Software design principles
+• Testing & QA
+• Project management basics","• Software requirements specification for a sample project
+• Software design document",Apply an SDLC methodology to a software project,Write a software requirements specification,Design a software system using standard modeling techniques,Apply basic testing and QA practices,
+CSC 470,Software Engineering Lab,1,11,"Lab component of CSC 469, hands-on application of software engineering practices to a team project.","• Team-based project development
+• Version control practice
+• Iterative development practice",• Team software project implementation using an SDLC methodology,Apply software engineering practices in a team project setting,Use version control in a collaborative development workflow,,,
+ART 203,Career Planning,1,11,Final-semester career-readiness course focused on job search strategy and transition to the workforce.,"• Job search strategy
+• Interview preparation
+• Personal branding
+• Workplace transition","• Mock interview
+• Final resume/portfolio review",Apply an effective job search strategy,Perform confidently in a mock interview,Present a professional resume/portfolio,,
+CSE 4317,Machine Learning and Practices,3,11,"This course introduces the fundamental theory and design of machine learning algorithms. It covers formal models of learning, generalization theory, optimization methods, and core learning algorithms, progressing from linear models to ensemble methods and modern deep learning architectures.","• Concept Learning
+• PAC Learning Framework
+• Bias-Variance Tradeoff
+• Linear Regression
+• Gradient Descent
+• Support Vector Machines
+• Decision Trees
+• Clustering
+• Multi-Layer Perceptrons
+• Convolutional Neural Networks
+• Attention & Transformers",• (not specified in the source outline — example only) Applied ML project on a sample dataset,Explain the fundamentals of learning by machines with algorithms.,Apply the concepts of learning theories and algorithms to solve problems.,Analyze real life problems to propose a solution using the concepts of learning theories and algorithms.,,

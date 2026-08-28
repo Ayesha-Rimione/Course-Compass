@@ -10,6 +10,7 @@ from app.models.base import TimestampMixin
 if TYPE_CHECKING:
     from app.models.users import User
     from app.models.courses import Course
+    from app.models.portfolio import StudentProject, StudentCertification
 
 
 class ProgressStatus(str, enum.Enum):
@@ -33,6 +34,9 @@ class StudentProfile(Base, TimestampMixin):
     full_name: Mapped[Optional[str]] = mapped_column(
         String(255), nullable=True
     )
+    phone: Mapped[Optional[str]] = mapped_column(
+        String(50), nullable=True
+    )
     university: Mapped[str] = mapped_column(
         String(255), default="IUBAT", nullable=False
     )
@@ -50,6 +54,9 @@ class StudentProfile(Base, TimestampMixin):
     )
     cgpa: Mapped[Optional[float]] = mapped_column(
         Float, nullable=True
+    )
+    target_role: Mapped[Optional[str]] = mapped_column(
+        String(255), default="Full-Stack Software Engineer", nullable=True
     )
     admission_session: Mapped[Optional[str]] = mapped_column(
         String(100), nullable=True
@@ -73,10 +80,15 @@ class StudentProfile(Base, TimestampMixin):
         String(500), nullable=True
     )
 
-
     user: Mapped["User"] = relationship("User", back_populates="profile")
     course_progresses: Mapped[List["StudentCourseProgress"]] = relationship(
         "StudentCourseProgress", back_populates="student_profile", cascade="all, delete-orphan"
+    )
+    projects: Mapped[List["StudentProject"]] = relationship(
+        "StudentProject", back_populates="student_profile", cascade="all, delete-orphan"
+    )
+    certifications: Mapped[List["StudentCertification"]] = relationship(
+        "StudentCertification", back_populates="student_profile", cascade="all, delete-orphan"
     )
 
 

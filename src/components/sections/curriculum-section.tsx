@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
-import { ChevronDown, Star, Info, BookOpen } from "lucide-react";
+import { ChevronDown, Star, Info, BookOpen, Check, Search, Filter } from "lucide-react";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -10,257 +11,285 @@ import {
 } from "@/components/ui/select";
 import { grades } from "@/data/mock";
 import { Course, CourseStatus } from "@/types";
-import { getCourses, updateCourseStatus, updateCourseGrade, updateCourseRating } from "@/api/courses";
+import {
+  getCourses,
+  updateCourseStatus,
+  updateCourseGrade,
+  updateCourseRating,
+  batchSaveCompletedCourses,
+} from "@/api/courses";
 import { cn } from "@/lib/utils";
-
-const statusLabel: Record<CourseStatus, string> = {
-  completed: "Completed",
-  ongoing: "Ongoing",
-  "not-started": "Not started",
-};
 
 const semesters = Array.from({ length: 10 }, (_, i) => i + 1);
 
 export function CurriculumSection() {
   const [courses, setCourses] = useState<Course[]>([]);
-  const [open, setOpen] = useState<number[]>([6]);
-  const [bulk, setBulk] = useState<string>("");
+  const [openSemesters, setOpenSemesters] = useState<number[]>([1, 2]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [bulkSemester, setBulkSemester] = useState<string>("");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getCourses().then(setCourses);
+    async function loadData() {
+      setLoading(true);
+      const list = await getCourses();
+      setCourses(list);
+      setLoading(false);
+    }
+    loadData();
   }, []);
 
-  const grouped = useMemo(
-    () => semesters.map((s) => ({ semester: s, items: courses.filter((c) => c.semester === s) })),
-    [courses],
-  );
+  const filteredCourses = useMemo(() => {
+    if (!searchQuery.trim()) return courses;
+    const q = searchQuery.toLowerCase();
+    return courses.filter(
+      (c) => c.code.toLowerCase().includes(q) || c.title.toLowerCase().includes(q)
+    );
+  }, [courses, searchQuery]);
 
-  const update = async (code: string, patch: Partial<Course>) => {
-    setCourses((prev) => prev.map((c) => (c.code === code ? { ...c, ...patch } : c)));
-    if (patch.status) await updateCourseStatus(code, patch.status);
-    if (patch.grade) await updateCourseGrade(code, patch.grade);
-    if (patch.rating !== undefined) await updateCourseRating(code, patch.rating);
-  };
+  const groupedBySemester = useMemo(() => {
+    return semesters.map((sem) => ({
+      semester: sem,
+      items: filteredCourses.filter((c) => c.semester === sem),
+    }));
+  }, [filteredCourses]);
 
-  const applyBulk = (value: string) => {
-    setBulk(value);
-    const upto = Number(value);
-    setCourses((prev) =>
-      prev.map((c) => {
-        if (c.semester <= upto) {
-          const updated = { ...c, status: "completed" as CourseStatus, rating: c.rating ?? 3 };
-          updateCourseStatus(c.code, "completed");
-          return updated;
-        }
-        return c;
-      }),
+  const toggleSemester = (sem: number) => {
+    setOpenSemesters((prev) =>
+      prev.includes(sem) ? prev.filter((s) => s !== sem) : [...prev, sem]
     );
   };
 
-  const completed = courses.filter((c) => c.status === "completed").length;
+  const handleStatusToggle = async (code: string, currentStatus: CourseStatus) => {
+    const nextStatus: CourseStatus = currentStatus === "completed" ? "not-started" : "completed";
+    setCourses((prev) =>
+      prev.map((c) => (c.code === code ? { ...c, status: nextStatus, rating: c.rating ?? 4 } : c))
+    );
+    await updateCourseStatus(code, nextStatus);
+  };
+
+  const handleGradeChange = async (code: string, grade: string) => {
+    setCourses((prev) =>
+      prev.map((c) => (c.code === code ? { ...c, grade, status: "completed" as CourseStatus } : c))
+    );
+    await updateCourseGrade(code, grade);
+  };
+
+  const handleRatingChange = async (code: string, rating: number) => {
+    setCourses((prev) =>
+      prev.map((c) => (c.code === code ? { ...c, rating, status: "completed" as CourseStatus } : c))
+    );
+    await updateCourseRating(code, rating);
+  };
+
+  const applyBulkCompletion = async (value: string) => {
+    setBulkSemester(value);
+    const upto = Number(value);
+    if (!upto) return;
+
+    const toComplete: { code: string; grade: string; rating: number }[] = [];
+    const updated = courses.map((c) => {
+      if (c.semester <= upto) {
+        toComplete.push({ code: c.code, grade: c.grade || "A", rating: c.rating || 4 });
+        return {
+          ...c,
+          status: "completed" as CourseStatus,
+          rating: c.rating || 4,
+        };
+      }
+      return c;
+    });
+
+    setCourses(updated);
+    await batchSaveCompletedCourses(toComplete);
+  };
+
+  const totalCompleted = courses.filter((c) => c.status === "completed").length;
+  const totalCredits = courses
+    .filter((c) => c.status === "completed")
+    .reduce((sum, c) => sum + (c.credits || 3), 0);
 
   return (
-    <div>
-      <div className="card-soft mb-6 flex flex-wrap items-center gap-4 p-5">
-        <div>
-          <p className="eyebrow">Bulk update</p>
-          <p className="mt-1 font-display text-sm font-semibold">
-            I have completed through Semester
-          </p>
-        </div>
-        <Select value={bulk} onValueChange={applyBulk}>
-          <SelectTrigger className="w-36 rounded-xl">
-            <SelectValue placeholder="Select" />
-          </SelectTrigger>
-          <SelectContent>
-            {semesters.map((s) => (
-              <SelectItem key={s} value={String(s)}>
-                Semester {s}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        <span className="ml-auto font-display text-sm text-ink-soft">
-          {completed} / {courses.length} completed
-        </span>
-      </div>
-
-      <div className="space-y-3">
-        {grouped.map(({ semester, items }) => {
-          const isOpen = open.includes(semester);
-          const done = items.filter((c) => c.status === "completed").length;
-          return (
-            <div key={semester} className="card-soft overflow-hidden">
-              <button
-                type="button"
-                onClick={() =>
-                  setOpen((prev) =>
-                    prev.includes(semester)
-                      ? prev.filter((s) => s !== semester)
-                      : [...prev, semester],
-                  )
-                }
-                className="flex w-full items-center gap-3 px-5 py-3.5 text-left transition-colors hover:bg-secondary/60"
-              >
-                <ChevronDown
-                  className={cn("size-4 transition-transform duration-200", isOpen && "rotate-180")}
-                />
-                <span className="font-display text-sm font-bold">Semester {semester}</span>
-                <span className="text-xs text-ink-soft">
-                  {done}/{items.length} completed
-                </span>
-              </button>
-
-              <div
-                className={cn(
-                  "grid transition-all duration-300 ease-out",
-                  isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
-                )}
-              >
-                <div className="overflow-hidden">
-                  <div className="border-t border-border">
-                    {items.map((course) => (
-                      <CourseRow key={course.code} course={course} onUpdate={update} />
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
-function CourseRow({
-  course,
-  onUpdate,
-}: {
-  course: Course;
-  onUpdate: (code: string, patch: Partial<Course>) => void;
-}) {
-  const [showDetails, setShowDetails] = useState(false);
-  const isDone = course.status === "completed";
-  
-  return (
-    <div className="border-b border-border/70 px-5 py-3 last:border-b-0">
-      <div className="flex items-center gap-3">
-        <Checkbox
-          checked={isDone}
-          onCheckedChange={(v) =>
-            onUpdate(course.code, {
-              status: v ? "completed" : "not-started",
-              ...(v ? {} : { rating: undefined, grade: undefined }),
-            })
-          }
-          className="transition-transform duration-150 data-[state=checked]:scale-110"
-        />
-        <span className="w-20 font-display text-xs font-semibold text-ink-soft">{course.code}</span>
-        <span className="flex-1 text-sm font-medium">{course.title}</span>
-        <span className="text-xs text-ink-soft hidden sm:inline">{course.credits} Credits</span>
-        <button
-          type="button"
-          onClick={() => setShowDetails(!showDetails)}
-          className="text-ink-soft hover:text-ink transition-colors p-1"
-          title="View Course Outcomes & Details"
-        >
-          <Info className="size-4" />
-        </button>
-        <span
-          className={cn(
-            "rounded-full px-2.5 py-0.5 font-display text-[0.65rem] tracking-wider uppercase",
-            isDone && "bg-amber-soft text-ink",
-            course.status === "ongoing" && "bg-secondary text-ink-soft",
-            course.status === "not-started" && "border border-border text-ink-soft",
-          )}
-        >
-          {statusLabel[course.status]}
-        </span>
-      </div>
-
-      {showDetails && (
-        <div className="mt-2.5 pl-9 pr-4 py-3 rounded-xl bg-secondary/40 border border-border/50 text-xs space-y-2">
-          {course.prerequisite && (
-            <p className="text-ink-soft">
-              <strong className="text-foreground">Prerequisite:</strong> {course.prerequisite}
-            </p>
-          )}
-          {course.description && (
-            <p className="text-ink-soft">
-              <strong className="text-foreground">Description:</strong> {course.description}
-            </p>
-          )}
-          {course.courseOutcomes && course.courseOutcomes.length > 0 && (
-            <div>
-              <strong className="text-foreground">Course Outcomes (CO):</strong>
-              <ul className="list-disc pl-4 mt-1 space-y-0.5 text-ink-soft">
-                {course.courseOutcomes.map((co, i) => (
-                  <li key={i}>{co}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-          {course.skillsCovered && course.skillsCovered.length > 0 && (
-            <div className="flex flex-wrap gap-1.5 pt-1">
-              {course.skillsCovered.map((skill) => (
-                <span key={skill} className="px-2 py-0.5 rounded-md bg-background border border-border text-[0.68rem] font-medium text-ink-soft">
-                  {skill}
-                </span>
-              ))}
-            </div>
-          )}
-        </div>
-      )}
-
-      {isDone && (
-        <div className="animate-in fade-in mt-2 mb-1 flex flex-wrap items-center gap-6 pl-9 duration-200">
-          <div className="flex items-center gap-2">
-            <span className="font-display text-[0.65rem] tracking-wider text-ink-soft uppercase">
-              How well did you learn this? <span className="text-destructive">*</span>
-            </span>
-            <div className="flex gap-0.5">
-              {[1, 2, 3, 4, 5].map((n) => (
-                <button
-                  key={n}
-                  type="button"
-                  aria-label={`Rate ${n}`}
-                  onClick={() => onUpdate(course.code, { rating: n })}
-                  className="transition-transform hover:scale-110"
-                >
-                  <Star
-                    className={cn(
-                      "size-4",
-                      (course.rating ?? 0) >= n ? "fill-amber text-amber" : "text-border",
-                    )}
-                  />
-                </button>
-              ))}
-            </div>
+    <div className="space-y-6">
+      {/* Top Summary & Bulk Controls */}
+      <div className="card-soft flex flex-wrap items-center justify-between gap-4 p-5">
+        <div className="flex flex-wrap items-center gap-4">
+          <div>
+            <p className="eyebrow">Transcript Checklist</p>
+            <h3 className="mt-0.5 font-display text-base font-bold">
+              {totalCompleted} of {courses.length} Courses Completed ({totalCredits} Credits)
+            </h3>
           </div>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-3">
           <div className="flex items-center gap-2">
-            <span className="font-display text-[0.65rem] tracking-wider text-ink-soft uppercase">
-              Grade · optional
-            </span>
-            <Select
-              value={course.grade ?? ""}
-              onValueChange={(v) => onUpdate(course.code, { grade: v })}
-            >
-              <SelectTrigger className="h-8 w-24 rounded-lg">
-                <SelectValue placeholder="—" />
+            <span className="text-xs font-semibold text-ink-soft">Quick bulk tick:</span>
+            <Select value={bulkSemester} onValueChange={applyBulkCompletion}>
+              <SelectTrigger className="w-36 h-9 rounded-xl text-xs font-bold font-display">
+                <SelectValue placeholder="Through Sem..." />
               </SelectTrigger>
               <SelectContent>
-                {grades.map((g) => (
-                  <SelectItem key={g} value={g}>
-                    {g}
+                {semesters.map((s) => (
+                  <SelectItem key={s} value={String(s)} className="text-xs">
+                    Through Semester {s}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           </div>
-          {!course.rating && <span className="text-[0.7rem] text-destructive">Rating required</span>}
+
+          <div className="relative w-48 sm:w-60">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-ink-soft" />
+            <Input
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search course code/title..."
+              className="h-9 pl-8 text-xs rounded-xl"
+            />
+          </div>
         </div>
-      )}
+      </div>
+
+      {/* Grouped Courses Per Semester Accordion */}
+      <div className="space-y-4">
+        {groupedBySemester.map(({ semester, items }) => {
+          if (items.length === 0 && searchQuery) return null;
+          const isOpen = openSemesters.includes(semester);
+          const completedInSem = items.filter((c) => c.status === "completed").length;
+
+          return (
+            <div key={semester} className="card-soft overflow-hidden border border-border/80">
+              <button
+                type="button"
+                onClick={() => toggleSemester(semester)}
+                className="flex w-full items-center justify-between p-4 text-left transition-colors hover:bg-secondary/40"
+              >
+                <div className="flex items-center gap-3">
+                  <div className="flex size-8 items-center justify-center rounded-lg bg-amber-soft font-display text-xs font-bold text-amber-900 border border-amber/30">
+                    S{semester}
+                  </div>
+                  <div>
+                    <h4 className="font-display text-sm font-bold text-ink">
+                      Semester {semester}{" "}
+                      {semester === 1 ? "(Freshman Core)" : semester >= 9 ? "(Elective / Capstone Track)" : ""}
+                    </h4>
+                    <p className="text-[0.7rem] text-ink-soft">
+                      {completedInSem} of {items.length} completed
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="text-xs font-bold font-mono text-ink-soft">
+                    {Math.round((completedInSem / Math.max(1, items.length)) * 100)}%
+                  </span>
+                  <ChevronDown
+                    className={cn(
+                      "size-4 text-ink-soft transition-transform duration-200",
+                      isOpen && "rotate-180"
+                    )}
+                  />
+                </div>
+              </button>
+
+              {isOpen && (
+                <div className="border-t border-border/60 divide-y divide-border/40 bg-surface/50">
+                  {items.map((course) => {
+                    const isDone = course.status === "completed";
+                    return (
+                      <div
+                        key={course.code}
+                        className={cn(
+                          "flex flex-wrap items-center justify-between gap-4 p-4 transition-colors",
+                          isDone && "bg-amber-soft/10"
+                        )}
+                      >
+                        <div className="flex items-start gap-3 min-w-0 max-w-lg">
+                          <button
+                            type="button"
+                            onClick={() => handleStatusToggle(course.code, course.status)}
+                            className={cn(
+                              "mt-0.5 flex size-5 shrink-0 items-center justify-center rounded-md border transition-colors",
+                              isDone
+                                ? "bg-amber border-amber text-ink"
+                                : "border-border hover:border-amber"
+                            )}
+                          >
+                            {isDone && <Check className="size-3.5 stroke-[3]" />}
+                          </button>
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <span className="font-mono text-xs font-bold text-amber">
+                                {course.code}
+                              </span>
+                              <span className="text-[0.7rem] px-2 py-0.5 rounded bg-secondary text-ink-soft">
+                                {course.credits} Cr
+                              </span>
+                            </div>
+                            <h5 className="font-display text-sm font-semibold text-ink mt-0.5">
+                              {course.title}
+                            </h5>
+                            {course.description && (
+                              <p className="text-xs text-ink-soft line-clamp-1 mt-0.5">
+                                {course.description}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Grade & Rating Controls */}
+                        {isDone && (
+                          <div className="flex items-center gap-3 ml-auto animate-in fade-in duration-200">
+                            <div className="flex items-center gap-1.5">
+                              <span className="text-[0.7rem] font-semibold text-ink-soft">Grade:</span>
+                              <Select
+                                value={course.grade || "A"}
+                                onValueChange={(g) => handleGradeChange(course.code, g)}
+                              >
+                                <SelectTrigger className="h-7 w-16 text-xs font-bold rounded-lg">
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {grades.map((g) => (
+                                    <SelectItem key={g} value={g} className="text-xs font-mono">
+                                      {g}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </div>
+
+                            <div className="flex items-center gap-1">
+                              {[1, 2, 3, 4, 5].map((star) => (
+                                <button
+                                  key={star}
+                                  type="button"
+                                  onClick={() => handleRatingChange(course.code, star)}
+                                  className="p-0.5 transition-transform hover:scale-110"
+                                  title={`Self rating: ${star}/5`}
+                                >
+                                  <Star
+                                    className={cn(
+                                      "size-3.5",
+                                      star <= (course.rating || 4)
+                                        ? "fill-amber text-amber"
+                                        : "text-ink-soft/40"
+                                    )}
+                                  />
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }

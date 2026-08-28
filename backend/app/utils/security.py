@@ -64,3 +64,17 @@ def get_current_user(
     if user is None:
         raise credentials_exception
     return user
+
+
+def get_current_admin_user(
+    current_user: User = Depends(get_current_user)
+) -> User:
+    allowed_roles = ["ADMIN", "DEPARTMENT_ADMIN", "IUBAT_AUTHORITY", "SUPER_ADMIN"]
+    user_role_str = current_user.role.value if hasattr(current_user.role, "value") else str(current_user.role)
+    if user_role_str not in allowed_roles:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="CSE Department Admin privileges required."
+        )
+    return current_user
+

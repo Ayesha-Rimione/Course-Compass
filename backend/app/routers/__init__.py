@@ -12,6 +12,7 @@ from app.routers.planning import router as planning_router
 from app.routers.recommendations import router as recommendations_router
 from app.routers.ai_context import router as ai_context_router
 from app.routers.chat import router as chat_router
+from app.routers.admin import router as admin_router
 
 __all__ = [
     "health_router",
@@ -28,4 +29,5 @@ __all__ = [
     "recommendations_router",
     "ai_context_router",
     "chat_router",
+    "admin_router",
 ]

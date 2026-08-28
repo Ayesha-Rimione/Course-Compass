@@ -60,26 +60,36 @@ function RoadmapPage() {
       <div className="space-y-8">
         <div className="grid gap-6 lg:grid-cols-[1.15fr_1fr] lg:items-stretch">
           <Reveal>
-            <div className="card-soft flex h-full items-center gap-8 p-8">
+            <div className="card-soft flex h-full items-center gap-8 p-8 relative overflow-hidden">
               <ProgressRing percent={data.percent} />
               <div>
-                <p className="eyebrow">Overall readiness</p>
+                <div className="flex items-center gap-2">
+                  <p className="eyebrow">Overall readiness</p>
+                  <span className="text-[0.65rem] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-soft text-amber-900 border border-amber/40">
+                    Sample Data / Preview
+                  </span>
+                </div>
                 <p className="mt-2 font-display text-4xl leading-tight font-bold">
                   {data.percent}% of the way
                   <br />
                   to {data.targetRole}
                 </p>
                 <p className="mt-4 text-sm text-ink-soft">
-                  Recalculated automatically whenever you update the curriculum checklist or your skill ratings.
+                  Readiness estimated from your real coursework against benchmark industry profiles.
                 </p>
               </div>
             </div>
           </Reveal>
 
           <Reveal delay={120}>
-            <div className="card-soft h-full p-6">
-              <p className="eyebrow">Competency radar</p>
-              <p className="mt-1 text-xs text-ink-soft">Current vs required</p>
+            <div className="card-soft h-full p-6 relative">
+              <div className="flex items-center justify-between">
+                <p className="eyebrow">Competency radar</p>
+                <span className="text-[0.65rem] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-soft text-amber-900 border border-amber/40">
+                  Sample Benchmark
+                </span>
+              </div>
+              <p className="mt-1 text-xs text-ink-soft">Current estimated level vs required benchmark</p>
               <div className="mt-2 h-[260px]">
                 <ResponsiveContainer width="100%" height="100%">
                   <RadarChart data={data.radar} outerRadius="72%">

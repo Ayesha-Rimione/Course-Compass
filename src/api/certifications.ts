@@ -1,32 +1,56 @@
 import { Certification } from "@/types";
-import { initialCertifications } from "@/data/mock";
-
-let currentCertifications: Certification[] = [...initialCertifications];
+import { apiFetch } from "./client";
 
 export async function getCertifications(): Promise<Certification[]> {
-  // Simulates FastAPI GET /api/v1/certifications
-  return [...currentCertifications];
+  try {
+    const raw = await apiFetch<any[]>("/students/me/certifications");
+    if (Array.isArray(raw)) {
+      return raw.map((c) => ({
+        id: c.id,
+        name: c.name,
+        issuer: c.issuer,
+        issueDate: c.issue_date || "",
+        expiryDate: c.expiry_date || undefined,
+        credentialId: c.credential_id || undefined,
+        credentialUrl: c.credential_url || undefined,
+      }));
+    }
+    return [];
+  } catch (err: any) {
+    return [];
+  }
 }
 
-export async function addCertification(cert: Omit<Certification, "id">): Promise<Certification> {
-  // Simulates FastAPI POST /api/v1/certifications
-  const newCert: Certification = {
-    ...cert,
-    id: `cert-${Date.now()}`,
+export async function addCertification(
+  cert: Omit<Certification, "id">
+): Promise<Certification> {
+  const payload = {
+    name: cert.name,
+    issuer: cert.issuer,
+    issue_date: cert.issueDate,
+    expiry_date: cert.expiryDate,
+    credential_id: cert.credentialId,
+    credential_url: cert.credentialUrl,
   };
-  currentCertifications = [...currentCertifications, newCert];
-  return newCert;
-}
 
-export async function updateCertification(id: string, updates: Partial<Certification>): Promise<Certification> {
-  // Simulates FastAPI PUT /api/v1/certifications/{id}
-  const index = currentCertifications.findIndex((c) => c.id === id);
-  if (index === -1) throw new Error("Certification not found");
-  currentCertifications[index] = { ...currentCertifications[index], ...updates };
-  return { ...currentCertifications[index] };
+  const created = await apiFetch("/students/me/certifications", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+
+  return {
+    id: created.id,
+    name: created.name,
+    issuer: created.issuer,
+    issueDate: created.issue_date || "",
+    expiryDate: created.expiry_date || undefined,
+    credentialId: created.credential_id || undefined,
+    credentialUrl: created.credential_url || undefined,
+  };
 }
 
 export async function deleteCertification(id: string): Promise<void> {
-  // Simulates FastAPI DELETE /api/v1/certifications/{id}
-  currentCertifications = currentCertifications.filter((c) => c.id !== id);
+  await apiFetch(`/students/me/certifications/${id}`, {
+    method: "DELETE",
+  });
 }

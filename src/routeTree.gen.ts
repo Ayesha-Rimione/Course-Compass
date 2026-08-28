@@ -14,6 +14,7 @@ import { Route as AppRouteImport } from './routes/app'
 import { Route as SigninRouteImport } from './routes/signin'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as AppIndexRouteImport } from './routes/app.index'
+import { Route as AppAdminRouteImport } from './routes/app.admin'
 import { Route as AppBuildProfileRouteImport } from './routes/app.build-profile'
 import { Route as AppChatRouteImport } from './routes/app.chat'
 import { Route as AppPlanningRouteImport } from './routes/app.planning'
@@ -44,6 +45,11 @@ const SignupRoute = SignupRouteImport.update({
 const AppIndexRoute = AppIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppAdminRoute = AppAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => AppRoute,
 } as any)
 const AppBuildProfileRoute = AppBuildProfileRouteImport.update({
@@ -82,6 +88,7 @@ export interface FileRoutesByFullPath {
   '/app': typeof AppRouteWithChildren
   '/signin': typeof SigninRoute
   '/signup': typeof SignupRoute
+  '/app/admin': typeof AppAdminRoute
   '/app/build-profile': typeof AppBuildProfileRoute
   '/app/chat': typeof AppChatRoute
   '/app/planning': typeof AppPlanningRoute
@@ -94,6 +101,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/signin': typeof SigninRoute
   '/signup': typeof SignupRoute
+  '/app/admin': typeof AppAdminRoute
   '/app/build-profile': typeof AppBuildProfileRoute
   '/app/chat': typeof AppChatRoute
   '/app/planning': typeof AppPlanningRoute
@@ -108,6 +116,7 @@ export interface FileRoutesById {
   '/app': typeof AppRouteWithChildren
   '/signin': typeof SigninRoute
   '/signup': typeof SignupRoute
+  '/app/admin': typeof AppAdminRoute
   '/app/build-profile': typeof AppBuildProfileRoute
   '/app/chat': typeof AppChatRoute
   '/app/planning': typeof AppPlanningRoute
@@ -123,6 +132,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/signin'
     | '/signup'
+    | '/app/admin'
     | '/app/build-profile'
     | '/app/chat'
     | '/app/planning'
@@ -135,6 +145,7 @@ export interface FileRouteTypes {
     | '/'
     | '/signin'
     | '/signup'
+    | '/app/admin'
     | '/app/build-profile'
     | '/app/chat'
     | '/app/planning'
@@ -148,6 +159,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/signin'
     | '/signup'
+    | '/app/admin'
     | '/app/build-profile'
     | '/app/chat'
     | '/app/planning'
@@ -201,6 +213,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/admin': {
+      id: '/app/admin'
+      path: '/admin'
+      fullPath: '/app/admin'
+      preLoaderRoute: typeof AppAdminRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/build-profile': {
       id: '/app/build-profile'
       path: '/build-profile'
@@ -247,6 +266,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AppRouteChildren {
+  AppAdminRoute: typeof AppAdminRoute
   AppBuildProfileRoute: typeof AppBuildProfileRoute
   AppChatRoute: typeof AppChatRoute
   AppPlanningRoute: typeof AppPlanningRoute
@@ -257,6 +277,7 @@ interface AppRouteChildren {
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppAdminRoute: AppAdminRoute,
   AppBuildProfileRoute: AppBuildProfileRoute,
   AppChatRoute: AppChatRoute,
   AppPlanningRoute: AppPlanningRoute,
