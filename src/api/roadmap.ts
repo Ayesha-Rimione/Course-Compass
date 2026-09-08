@@ -1,8 +1,20 @@
 import { apiFetch } from "./client";
 import { Roadmap as RoadmapType } from "@/types";
 import { getStudentProfile } from "./students";
-import { getCourses } from "./courses";
-import { calculateDemoRoadmap } from "@/data/demo-skills";
+
+export const defaultEmptyRoadmap: RoadmapType = {
+  targetRole: "Career Path Exploring",
+  percent: 0,
+  summary: "Complete your profile and log completed coursework to generate your personalized career readiness score.",
+  currentLevel: "Exploring",
+  strongestSkills: [],
+  weakestSkills: [],
+  criticalGaps: [],
+  nextPriority: "Build your academic profile",
+  gaps: [],
+  radar: [],
+  semesterGuidance: [],
+};
 
 export async function getRoadmap(): Promise<RoadmapType> {
   try {
@@ -37,19 +49,10 @@ export async function getRoadmap(): Promise<RoadmapType> {
       };
     }
   } catch {
-    // calculate roadmap from real student profile and real completed courses
+    // Unauthenticated or profile not yet created
   }
 
-  const profile = await getStudentProfile();
-  const courses = await getCourses();
-  const completed = courses.filter((c) => c.status === "completed");
-
-  return calculateDemoRoadmap(
-    profile.targetRole,
-    completed.length,
-    courses.length,
-    profile.cgpa || 3.0
-  );
+  return defaultEmptyRoadmap;
 }
 
 export async function getPlanningRecommendations(): Promise<{

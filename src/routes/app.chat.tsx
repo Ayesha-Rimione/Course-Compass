@@ -113,7 +113,7 @@ function ChatPage() {
             <div>
               <div className="flex items-center gap-2">
                 <p className="font-display text-sm font-bold text-ink">AI Bhai</p>
-                <span className="text-[0.65rem] px-2 py-0.5 rounded-full bg-amber-soft text-amber-950 font-bold border border-amber/30">
+                <span className="text-xs px-2.5 py-0.5 rounded-full bg-amber-soft text-amber-950 font-semibold border border-amber/30">
                   Senior Mentor
                 </span>
               </div>

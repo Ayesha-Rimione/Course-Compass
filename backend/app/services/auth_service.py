@@ -53,10 +53,14 @@ def register_user(db: Session, email: str, password: str, full_name: Optional[st
     db.commit()
 
     access_token = create_access_token(data={"sub": user.id, "email": user.email})
+    role_str = user.role.value if hasattr(user.role, "value") else str(user.role)
+    is_complete = bool(profile.student_id and profile.student_id.strip() and profile.current_semester and profile.current_semester > 0)
     return TokenResponse(
         access_token=access_token,
         token_type="bearer",
-        email=user.email
+        email=user.email,
+        role=role_str,
+        is_profile_complete=is_complete
     )
 
 
@@ -98,12 +102,17 @@ def login_user(db: Session, email: str, password: str) -> TokenResponse:
         )
         db.add(profile)
         db.commit()
+        db.refresh(user)
 
     access_token = create_access_token(data={"sub": user.id, "email": user.email})
+    role_str = user.role.value if hasattr(user.role, "value") else str(user.role)
+    is_complete = bool(user.profile and user.profile.student_id and user.profile.student_id.strip() and user.profile.current_semester and user.profile.current_semester > 0)
     return TokenResponse(
         access_token=access_token,
         token_type="bearer",
-        email=user.email
+        email=user.email,
+        role=role_str,
+        is_profile_complete=is_complete
     )
 
 
@@ -217,8 +226,12 @@ def verify_otp(db: Session, email: str, code: str) -> TokenResponse:
 
     # Issue JWT token
     access_token = create_access_token(data={"sub": user.id, "email": user.email})
+    role_str = user.role.value if hasattr(user.role, "value") else str(user.role)
+    is_complete = bool(user.profile and user.profile.student_id and user.profile.student_id.strip() and user.profile.current_semester and user.profile.current_semester > 0)
     return TokenResponse(
         access_token=access_token,
         token_type="bearer",
-        email=user.email
+        email=user.email,
+        role=role_str,
+        is_profile_complete=is_complete
     )

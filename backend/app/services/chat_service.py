@@ -97,13 +97,16 @@ def get_conversation_detail(
     )
 
 
+from app.services import ai_bhai_service
+
+
 def post_message(
     db: Session, user: User, conversation_id: str, data: MessageCreate
 ) -> MessagePostResponse:
     """
-    Persist a new user message to a conversation.
-    Does NOT call an LLM (reserved for Phase 7).
-    Returns persisted user message and clear status.
+    Persist a new user message to a conversation and generate an AI Bhai response
+    injected with the student's complete academic context.
+    Enforces strict student ownership and security isolation.
     """
     profile = get_or_create_profile(db, user)
 
@@ -132,14 +135,33 @@ def post_message(
     )
     db.add(user_msg)
 
-    # Update conversation updated_at
-    conversation.title = data.content[:40] + ("..." if len(data.content) > 40 else "") if conversation.title == "New Advising Session" else conversation.title
+    # Update conversation title if default
+    if conversation.title == "New Advising Session":
+        conversation.title = data.content[:40] + ("..." if len(data.content) > 40 else "")
 
     db.commit()
     db.refresh(user_msg)
 
+    # 2. Generate AI Bhai Response with Student Intelligence Context
+    ai_response_content = ai_bhai_service.generate_ai_bhai_response(
+        db=db,
+        user=user,
+        conversation=conversation,
+        current_message_content=data.content,
+    )
+
+    # 3. Persist Assistant Message
+    assistant_msg = ChatMessage(
+        conversation_id=conversation.id,
+        role="assistant",
+        content=ai_response_content,
+    )
+    db.add(assistant_msg)
+    db.commit()
+    db.refresh(assistant_msg)
+
     return MessagePostResponse(
         user_message=ChatMessageResponse.model_validate(user_msg),
-        assistant_message=None,
-        ai_status="AI generation disabled until Phase 7. Message persisted successfully in conversation history.",
+        assistant_message=ChatMessageResponse.model_validate(assistant_msg),
+        ai_status="AI Bhai responded successfully.",
     )

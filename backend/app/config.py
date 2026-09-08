@@ -17,11 +17,21 @@ class Settings(BaseSettings):
     OTP_EXPIRE_MINUTES: int = 10
     ALLOWED_EMAIL_DOMAINS: str = "iubat.edu"
 
+    # Groq AI Bhai Settings
+    GROQ_API_KEY: str = ""
+    GROQ_MODEL: str = "openai/gpt-oss-120b"
+    GROQ_API_BASE: str = "https://api.groq.com/openai/v1"
+    GROQ_TIMEOUT_SECONDS: float = 30.0
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
         extra="ignore"
     )
+
+    @property
+    def groq_api_key_clean(self) -> str:
+        return self.GROQ_API_KEY.strip() if self.GROQ_API_KEY else ""
 
     @property
     def allowed_domains_list(self) -> List[str]:

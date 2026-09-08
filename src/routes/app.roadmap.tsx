@@ -65,8 +65,8 @@ function RoadmapPage() {
               <div>
                 <div className="flex items-center gap-2">
                   <p className="eyebrow">Overall readiness</p>
-                  <span className="text-[0.65rem] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-soft text-amber-900 border border-amber/40">
-                    Sample Data / Preview
+                  <span className="text-xs font-semibold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">
+                    Deterministic Readiness
                   </span>
                 </div>
                 <p className="mt-2 font-display text-4xl leading-tight font-bold">
@@ -75,7 +75,7 @@ function RoadmapPage() {
                   to {data.targetRole}
                 </p>
                 <p className="mt-4 text-sm text-ink-soft">
-                  Readiness estimated from your real coursework against benchmark industry profiles.
+                  Readiness calculated from your real completed coursework and verified competencies.
                 </p>
               </div>
             </div>
@@ -85,8 +85,8 @@ function RoadmapPage() {
             <div className="card-soft h-full p-6 relative">
               <div className="flex items-center justify-between">
                 <p className="eyebrow">Competency radar</p>
-                <span className="text-[0.65rem] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-soft text-amber-900 border border-amber/40">
-                  Sample Benchmark
+                <span className="text-xs font-semibold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">
+                  Role Benchmark
                 </span>
               </div>
               <p className="mt-1 text-xs text-ink-soft">Current estimated level vs required benchmark</p>

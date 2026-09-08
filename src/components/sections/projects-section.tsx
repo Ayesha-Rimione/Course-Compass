@@ -282,12 +282,12 @@ export function ProjectsSection() {
                           {repo.name}
                         </span>
                         {repo.language && (
-                          <span className="text-[0.65rem] px-2 py-0.5 rounded-full bg-secondary font-mono text-ink-soft">
+                          <span className="text-xs px-2 py-0.5 rounded-full bg-secondary font-mono text-ink-soft">
                             {repo.language}
                           </span>
                         )}
                         {repo.stargazers_count > 0 && (
-                          <span className="flex items-center gap-0.5 text-[0.7rem] text-amber font-semibold">
+                          <span className="flex items-center gap-0.5 text-xs text-amber font-semibold">
                             <Star className="size-3 fill-amber" /> {repo.stargazers_count}
                           </span>
                         )}
@@ -346,7 +346,7 @@ export function ProjectsSection() {
                     {proj.technologies.map((tech) => (
                       <span
                         key={tech}
-                        className="px-2 py-0.5 rounded-md bg-secondary text-[0.68rem] font-medium text-ink-soft border border-border/50"
+                        className="px-2 py-0.5 rounded-md bg-secondary text-xs font-medium text-ink-soft border border-border/50"
                       >
                         {tech}
                       </span>

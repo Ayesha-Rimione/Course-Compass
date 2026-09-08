@@ -23,7 +23,7 @@ export function JobsSection() {
             <div className="space-y-2">
               <div className="flex flex-wrap items-center gap-2">
                 <h4 className="font-display text-base font-bold text-foreground">{job.title}</h4>
-                <span className="px-2.5 py-0.5 rounded-full bg-secondary text-ink-soft font-display text-[0.65rem] uppercase font-semibold border border-border">
+                <span className="px-2.5 py-0.5 rounded-full bg-secondary text-ink-soft font-display text-xs uppercase font-semibold border border-border">
                   {job.jobType}
                 </span>
               </div>
@@ -38,7 +38,7 @@ export function JobsSection() {
               {job.requiredSkills && (
                 <div className="flex flex-wrap gap-1.5 pt-1">
                   {job.requiredSkills.map((sk) => (
-                    <span key={sk} className="px-2 py-0.5 rounded-md bg-amber-soft text-ink text-[0.65rem] font-medium">
+                    <span key={sk} className="px-2 py-0.5 rounded-md bg-amber-soft text-ink text-xs font-medium">
                       {sk}
                     </span>
                   ))}
@@ -46,7 +46,7 @@ export function JobsSection() {
               )}
             </div>
             <div className="flex items-center justify-between md:flex-col md:items-end gap-2 shrink-0 pt-2 md:pt-0 border-t md:border-t-0 border-border">
-              <span className="text-[0.7rem] text-ink-soft flex items-center gap-1">
+              <span className="text-xs text-ink-soft flex items-center gap-1">
                 <Calendar className="size-3" /> {job.postedDate}
               </span>
               <a

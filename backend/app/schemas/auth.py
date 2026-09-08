@@ -26,6 +26,8 @@ class TokenResponse(BaseModel):
     access_token: str
     token_type: str = "bearer"
     email: str
+    role: str = "STUDENT"
+    is_profile_complete: bool = False
 
 
 class MessageResponse(BaseModel):

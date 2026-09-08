@@ -8,6 +8,7 @@ import {
   type LucideIcon,
   LogIn,
   UserPlus,
+  GraduationCap,
 } from "lucide-react";
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
 import { CountUp, Reveal } from "@/components/motion";
@@ -57,7 +58,7 @@ function Landing() {
         >
           <div className="mx-auto max-w-5xl text-center">
             <Reveal>
-              <span className="inline-block rounded-full border border-border/60 bg-surface/85 px-5 py-2 font-display text-[0.68rem] tracking-[0.2em] uppercase backdrop-blur-md shadow-sm">
+              <span className="inline-block rounded-full border border-border/60 bg-surface/85 px-5 py-2 font-display text-xs tracking-[0.16em] uppercase backdrop-blur-md shadow-sm">
                 {institution.fullName}
               </span>
             </Reveal>
@@ -76,23 +77,60 @@ function Landing() {
               </p>
             </Reveal>
             <Reveal delay={300}>
-              <div className="mx-auto mt-10 flex w-full max-w-sm flex-col gap-3 rounded-2xl border border-border/80 bg-surface/90 p-4 shadow-[var(--shadow-lift)] backdrop-blur-lg">
-                <p className="eyebrow py-1">Student access</p>
-                <Button asChild size="lg" className="rounded-xl font-display text-base shadow-md gap-2">
-                  <Link to="/signup">
-                    <UserPlus className="size-4" /> Sign up
-                  </Link>
-                </Button>
-                <Button asChild size="lg" variant="outline" className="rounded-xl font-display text-base bg-background/80 hover:bg-background gap-2">
-                  <Link to="/signin">
-                    <LogIn className="size-4" /> Sign in
-                  </Link>
-                </Button>
+              <div className="mx-auto mt-10 grid w-full max-w-2xl grid-cols-1 gap-4 sm:grid-cols-2">
+                {/* Student Access Portal */}
+                <div className="flex flex-col justify-between gap-3 rounded-2xl border border-border/80 bg-surface/90 p-5 shadow-[var(--shadow-lift)] backdrop-blur-lg text-left">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="flex size-7 items-center justify-center rounded-full bg-ink text-background">
+                        <Compass className="size-3.5" />
+                      </span>
+                      <p className="eyebrow py-0.5">Student Portal</p>
+                    </div>
+                    <p className="mt-2 text-xs text-ink-soft">
+                      Log in with your IUBAT student email to map coursework, track skill readiness, and chat with AI Bhai.
+                    </p>
+                  </div>
+                  <div className="flex flex-col gap-2 pt-2">
+                    <Button asChild size="lg" className="w-full rounded-xl font-display text-sm shadow-md gap-2">
+                      <Link to="/signin">
+                        <LogIn className="size-4" /> Student Sign In
+                      </Link>
+                    </Button>
+                    <Button asChild size="lg" variant="outline" className="w-full rounded-xl font-display text-sm bg-background/80 hover:bg-background gap-2">
+                      <Link to="/signup">
+                        <UserPlus className="size-4" /> Create Account
+                      </Link>
+                    </Button>
+                  </div>
+                </div>
+
+                {/* CSE Department Admin Portal */}
+                <div className="flex flex-col justify-between gap-3 rounded-2xl border border-emerald-600/30 bg-emerald-950/20 p-5 shadow-[var(--shadow-lift)] backdrop-blur-lg text-left">
+                  <div>
+                    <div className="flex items-center gap-2">
+                      <span className="flex size-7 items-center justify-center rounded-full bg-emerald-700 text-white">
+                        <GraduationCap className="size-3.5" />
+                      </span>
+                      <p className="eyebrow text-emerald-800 dark:text-emerald-300 py-0.5">CSE Admin</p>
+                    </div>
+                    <p className="mt-2 text-xs text-ink-soft">
+                      Department faculty and coordinators: track student cohorts, manage curriculum, and govern CO/PO.
+                    </p>
+                  </div>
+                  <div className="flex flex-col gap-2 pt-2">
+                    <Button asChild size="lg" className="w-full rounded-xl bg-emerald-700 hover:bg-emerald-800 text-white font-display text-sm shadow-md gap-2">
+                      <Link to="/admin/signin">
+                        <GraduationCap className="size-4" /> Admin Sign In
+                      </Link>
+                    </Button>
+                  </div>
+                </div>
               </div>
             </Reveal>
             <Reveal delay={400}>
               <p className="mt-7 font-display text-xs tracking-[0.2em] text-foreground/80 uppercase font-semibold">
-                @{institution.emailDomain} accounts only
+                @{institution.emailDomain} institutional accounts only
               </p>
             </Reveal>
           </div>
@@ -107,7 +145,7 @@ function Landing() {
                   <p className="font-display text-5xl font-bold text-foreground">
                     <CountUp value={stat.value} suffix={stat.suffix} />
                   </p>
-                  <p className="mt-2 font-display text-[0.68rem] tracking-[0.18em] text-ink-soft uppercase font-medium">
+                  <p className="mt-2 font-display text-xs tracking-[0.14em] text-ink-soft uppercase font-medium">
                     {stat.label}
                   </p>
                 </div>

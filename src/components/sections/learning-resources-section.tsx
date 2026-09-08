@@ -23,7 +23,7 @@ export function LearningResourcesSection() {
             <div>
               <div className="flex items-start justify-between gap-2">
                 <span className="eyebrow">{res.category}</span>
-                <span className={`px-2 py-0.5 rounded-full text-[0.65rem] font-display font-semibold uppercase ${res.isFree ? "bg-amber-soft text-ink" : "bg-secondary text-ink-soft border border-border"}`}>
+                <span className={`px-2.5 py-0.5 rounded-full text-xs font-display font-semibold uppercase ${res.isFree ? "bg-amber-soft text-ink" : "bg-secondary text-ink-soft border border-border"}`}>
                   {res.isFree ? "Free" : res.price || "Paid"}
                 </span>
               </div>

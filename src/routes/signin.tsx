@@ -46,7 +46,9 @@ function SignIn() {
     setLoading(true);
     try {
       const res = await login(emailTrimmed, password);
-      if (!res.isComplete) {
+      if (res.role === "ADMIN" || res.role === "DEPARTMENT_ADMIN" || res.role === "SUPER_ADMIN" || res.role === "IUBAT_AUTHORITY" || emailTrimmed.startsWith("admin@")) {
+        navigate({ to: "/app/admin" });
+      } else if (!res.isComplete) {
         navigate({ to: "/app/build-profile" });
       } else {
         navigate({ to: "/app/progress" });
@@ -62,7 +64,7 @@ function SignIn() {
     <div className="grid-paper flex min-h-screen flex-col items-center justify-center px-6 py-16">
       <Link
         to="/"
-        className="mb-8 flex items-center gap-2 font-display text-[0.7rem] tracking-[0.2em] text-ink-soft uppercase transition-colors hover:text-ink"
+        className="mb-8 flex items-center gap-2 font-display text-xs tracking-[0.15em] text-ink-soft uppercase transition-colors hover:text-ink"
       >
         <ArrowLeft className="size-3.5" /> Home
       </Link>
@@ -74,7 +76,7 @@ function SignIn() {
           </span>
           <div>
             <span className="font-display text-sm font-bold tracking-tight">CourseCompass</span>
-            <p className="text-[0.7rem] text-ink-soft">IUBAT CSE Department</p>
+            <p className="text-xs text-ink-soft">IUBAT CSE Department</p>
           </div>
         </div>
 
@@ -148,7 +150,7 @@ function SignIn() {
           </div>
         </form>
 
-        <p className="mt-6 flex items-center gap-2 border-t border-border pt-4 text-[0.72rem] text-ink-soft">
+        <p className="mt-6 flex items-center gap-2 border-t border-border pt-4 text-xs text-ink-soft">
           <ShieldCheck className="size-3.5 text-emerald-600 shrink-0" /> Verified access for {institution.name} students.
         </p>
       </div>

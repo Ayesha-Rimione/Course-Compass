@@ -107,7 +107,7 @@ function ProgressPage() {
             <div className="card-soft lift p-6 relative overflow-hidden">
               <div className="flex items-center justify-between">
                 <p className="eyebrow">{card.label}</p>
-                <span className="text-[0.65rem] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-700 border border-emerald-500/20">
+                <span className="text-xs font-semibold uppercase tracking-wider px-2.5 py-0.5 rounded bg-emerald-500/10 text-emerald-700 border border-emerald-500/20">
                   Real Data
                 </span>
               </div>
@@ -133,8 +133,8 @@ function ProgressPage() {
           <div className="card-soft p-8 relative">
             <div className="flex items-center justify-between">
               <p className="eyebrow">Target Role Readiness</p>
-              <span className="text-[0.68rem] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-soft text-amber-900 border border-amber/40">
-                Sample Data / Preview
+              <span className="text-xs font-semibold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">
+                Deterministic Readiness
               </span>
             </div>
             <h2 className="mt-2 font-display text-3xl font-bold">

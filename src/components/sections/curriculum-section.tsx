@@ -174,7 +174,7 @@ export function CurriculumSection() {
                       Semester {semester}{" "}
                       {semester === 1 ? "(Freshman Core)" : semester >= 9 ? "(Elective / Capstone Track)" : ""}
                     </h4>
-                    <p className="text-[0.7rem] text-ink-soft">
+                    <p className="text-xs text-ink-soft">
                       {completedInSem} of {items.length} completed
                     </p>
                   </div>
@@ -222,7 +222,7 @@ export function CurriculumSection() {
                               <span className="font-mono text-xs font-bold text-amber">
                                 {course.code}
                               </span>
-                              <span className="text-[0.7rem] px-2 py-0.5 rounded bg-secondary text-ink-soft">
+                              <span className="text-xs px-2 py-0.5 rounded bg-secondary text-ink-soft">
                                 {course.credits} Cr
                               </span>
                             </div>
@@ -241,7 +241,7 @@ export function CurriculumSection() {
                         {isDone && (
                           <div className="flex items-center gap-3 ml-auto animate-in fade-in duration-200">
                             <div className="flex items-center gap-1.5">
-                              <span className="text-[0.7rem] font-semibold text-ink-soft">Grade:</span>
+                              <span className="text-xs font-semibold text-ink-soft">Grade:</span>
                               <Select
                                 value={course.grade || "A"}
                                 onValueChange={(g) => handleGradeChange(course.code, g)}

@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppRouteImport } from './routes/app'
 import { Route as SigninRouteImport } from './routes/signin'
 import { Route as SignupRouteImport } from './routes/signup'
+import { Route as AdminSigninRouteImport } from './routes/admin.signin'
 import { Route as AppIndexRouteImport } from './routes/app.index'
 import { Route as AppAdminRouteImport } from './routes/app.admin'
 import { Route as AppBuildProfileRouteImport } from './routes/app.build-profile'
@@ -40,6 +41,11 @@ const SigninRoute = SigninRouteImport.update({
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
   path: '/signup',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminSigninRoute = AdminSigninRouteImport.update({
+  id: '/admin/signin',
+  path: '/admin/signin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppIndexRoute = AppIndexRouteImport.update({
@@ -88,6 +94,7 @@ export interface FileRoutesByFullPath {
   '/app': typeof AppRouteWithChildren
   '/signin': typeof SigninRoute
   '/signup': typeof SignupRoute
+  '/admin/signin': typeof AdminSigninRoute
   '/app/admin': typeof AppAdminRoute
   '/app/build-profile': typeof AppBuildProfileRoute
   '/app/chat': typeof AppChatRoute
@@ -101,6 +108,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/signin': typeof SigninRoute
   '/signup': typeof SignupRoute
+  '/admin/signin': typeof AdminSigninRoute
   '/app/admin': typeof AppAdminRoute
   '/app/build-profile': typeof AppBuildProfileRoute
   '/app/chat': typeof AppChatRoute
@@ -116,6 +124,7 @@ export interface FileRoutesById {
   '/app': typeof AppRouteWithChildren
   '/signin': typeof SigninRoute
   '/signup': typeof SignupRoute
+  '/admin/signin': typeof AdminSigninRoute
   '/app/admin': typeof AppAdminRoute
   '/app/build-profile': typeof AppBuildProfileRoute
   '/app/chat': typeof AppChatRoute
@@ -132,6 +141,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/signin'
     | '/signup'
+    | '/admin/signin'
     | '/app/admin'
     | '/app/build-profile'
     | '/app/chat'
@@ -145,6 +155,7 @@ export interface FileRouteTypes {
     | '/'
     | '/signin'
     | '/signup'
+    | '/admin/signin'
     | '/app/admin'
     | '/app/build-profile'
     | '/app/chat'
@@ -159,6 +170,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/signin'
     | '/signup'
+    | '/admin/signin'
     | '/app/admin'
     | '/app/build-profile'
     | '/app/chat'
@@ -174,6 +186,7 @@ export interface RootRouteChildren {
   AppRoute: typeof AppRouteWithChildren
   SigninRoute: typeof SigninRoute
   SignupRoute: typeof SignupRoute
+  AdminSigninRoute: typeof AdminSigninRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -204,6 +217,13 @@ declare module '@tanstack/react-router' {
       path: '/signup'
       fullPath: '/signup'
       preLoaderRoute: typeof SignupRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin/signin': {
+      id: '/admin/signin'
+      path: '/admin/signin'
+      fullPath: '/admin/signin'
+      preLoaderRoute: typeof AdminSigninRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/app/': {
@@ -294,6 +314,7 @@ const rootRouteChildren: RootRouteChildren = {
   AppRoute: AppRouteWithChildren,
   SigninRoute: SigninRoute,
   SignupRoute: SignupRoute,
+  AdminSigninRoute: AdminSigninRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

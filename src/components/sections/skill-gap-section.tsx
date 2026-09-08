@@ -20,8 +20,8 @@ export function SkillGapSection() {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2.5">
             <h3 className="font-display text-xl font-bold">Skill Gap Analysis</h3>
-            <span className="text-[0.65rem] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-amber-soft text-amber-900 border border-amber/40">
-              Sample Data / Preview
+            <span className="text-xs font-semibold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-300">
+              Deterministic Analysis
             </span>
           </div>
           <span className="px-3 py-1 rounded-full bg-secondary text-ink font-display text-xs font-semibold border border-border">
@@ -54,7 +54,7 @@ export function SkillGapSection() {
                 <td className="py-3.5 text-right">
                   <span
                     className={cn(
-                      "px-2.5 py-1 rounded-full font-display text-[0.68rem] uppercase font-bold tracking-wider",
+                      "px-2.5 py-1 rounded-full font-display text-xs uppercase font-semibold tracking-wider",
                       item.priority === "High" && "bg-destructive/15 text-destructive border border-destructive/30",
                       item.priority === "Medium" && "bg-amber-soft text-amber-950 border border-amber/30",
                       item.priority === "Low" && "bg-secondary text-ink-soft border border-border",

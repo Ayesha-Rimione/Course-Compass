@@ -99,7 +99,7 @@ export function InterestsSection() {
           <div className="space-y-1">
             <h4 className="font-display text-sm font-bold flex items-center gap-2">
               AI Role Suggestions
-              <span className="text-[0.68rem] px-2 py-0.5 rounded-full bg-secondary text-ink-soft font-normal">
+              <span className="text-xs px-2.5 py-0.5 rounded-full bg-secondary text-ink-soft font-normal">
                 {hasSufficientInfo ? "Data Ready" : "Awaiting Information"}
               </span>
             </h4>

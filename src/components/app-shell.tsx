@@ -21,7 +21,6 @@ const nav = [
   { to: "/app/roadmap", label: "Roadmap", icon: Compass },
   { to: "/app/planning", label: "Planning", icon: CalendarRange },
   { to: "/app/profile", label: "Profile", icon: UserRound },
-  { to: "/app/admin", label: "CSE Admin", icon: GraduationCap },
 ] as const;
 
 export function AppShell({
@@ -53,7 +52,7 @@ export function AppShell({
           <span className="flex size-8 items-center justify-center rounded-full bg-ink text-background">
             <Compass className="size-4" />
           </span>
-          <span className="font-display text-[0.95rem] font-bold tracking-tight">
+          <span className="font-display text-base font-bold tracking-tight">
             Course<span className="text-amber">Compass</span>
           </span>
         </Link>
@@ -103,7 +102,7 @@ export function AppShell({
               <p className="truncate text-xs text-ink-soft">{profile?.studentId || "21103042"}</p>
             </div>
           </div>
-          <p className="mt-3 flex items-center gap-1.5 text-[0.7rem] text-ink-soft">
+          <p className="mt-3 flex items-center gap-1.5 text-xs text-ink-soft">
             <GraduationCap className="size-3.5" /> Semester {profile?.semester || 6} · IUBAT CSE
           </p>
         </div>

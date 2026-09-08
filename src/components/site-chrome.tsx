@@ -14,11 +14,11 @@ export function SiteHeader() {
           <span className="flex size-8 items-center justify-center rounded-full bg-ink text-background">
             <Compass className="size-4" />
           </span>
-          <span className="font-display text-[0.95rem] font-bold tracking-tight">
+          <span className="font-display text-base font-bold tracking-tight">
             Course<span className="text-amber">Compass</span>
           </span>
         </Link>
-        <span className="hidden font-display text-[0.68rem] tracking-[0.2em] text-ink-soft uppercase md:inline">
+        <span className="hidden font-display text-xs tracking-[0.15em] text-ink-soft uppercase md:inline">
           {institution.name} · Department of CSE
         </span>
         <div className="ml-auto flex items-center gap-2">

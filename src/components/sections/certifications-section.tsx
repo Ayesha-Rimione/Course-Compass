@@ -159,7 +159,7 @@ export function CertificationsSection() {
                 {cert.skillsLearned && cert.skillsLearned.length > 0 && (
                   <div className="mt-3 flex flex-wrap gap-1.5">
                     {cert.skillsLearned.map((skill) => (
-                      <span key={skill} className="px-2 py-0.5 rounded-md bg-secondary text-[0.68rem] font-medium text-ink-soft border border-border/50">
+                      <span key={skill} className="px-2 py-0.5 rounded-md bg-secondary text-xs font-medium text-ink-soft border border-border/50">
                         {skill}
                       </span>
                     ))}
